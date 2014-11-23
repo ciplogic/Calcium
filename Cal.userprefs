@@ -1,0 +1,47 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|Mixed Platforms" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Cal.Core\BlockParser\BlockParser.cs">
+    <Files>
+      <File FileName="Cac\Program.cs" Line="24" Column="24" />
+      <File FileName="Tests.Cal\IronRubyParsing.cs" Line="29" Column="29" />
+      <File FileName="Cal.Core\BlockParser\BlockParser.cs" Line="40" Column="40" />
+      <File FileName="Cal.Core\BlockParser\BlockAstNode.cs" Line="38" Column="38" />
+      <File FileName="Cal.Core\StackParser\ParseTokenStream.cs" Line="9" Column="9" />
+      <File FileName="Cal.Core\StackParser\ParseMatchers\IParseMatcher.cs" Line="1" Column="1" />
+      <File FileName="Cal.Core\StackParser\ParseMatchers\IfStatementMatcher.cs" Line="1" Column="1" />
+      <File FileName="Cal.Core\StackParser\ParseMatchers\HeadTokenMatcher.cs" Line="36" Column="36" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Cal" expanded="True" />
+          <Node name="Cal.Core" expanded="True">
+            <Node name="BlockParser" expanded="True">
+              <Node name="BlockParser.cs" selected="True" />
+            </Node>
+          </Node>
+          <Node name="Tests.Cal" expanded="True" />
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True">
+          <Node name="Tests.Cal" expanded="True">
+            <Node name="Tests" expanded="True">
+              <Node name="Cal" expanded="True">
+                <Node name="IronRubyParsing" expanded="True">
+                  <Node name="TestParseFile0" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="C:\Oss\StatRubyCompiler\Tests.Cal\IronRubyParsing.cs" line="40" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
