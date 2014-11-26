@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cal.Core.BlockParser;
 using Cal.Core.Lexer;
 
 namespace Cal.Core.SimpleParser
@@ -97,23 +96,9 @@ namespace Cal.Core.SimpleParser
             }
             return result;
         }
-        public static AstNode FoldNodesUntilEoln(AstNode node, int start)
-        {
-            var items = node.Items;
-            var whileConditionLastToken = GetFirstTokenIndexInRange(node.RowTokens.Items, start, items.Count - 1, TokenKind.Eoln);
-            var foldNode = node.BuildNonTerminal(1, whileConditionLastToken, TokenKind.NonTerminal);
-            return foldNode;
-        }
 
 
-        public static AstNode FoldNodesFromRange(this AstNode node, int start, int nodesFromEnd, TokenKind parseKind)
-        {
-            var items = node.Items;
-            var foldNode = node.BuildNonTerminal(start, items.Count-1-nodesFromEnd, parseKind);
-            return foldNode;
-        }
-
-        public static void FoldNodes(AstNode ast, int start, int endRange, HashSet<TokenKind> startTokens, HashSet<TokenKind> endTokens)
+        public static void FoldNodes(AstNode ast, int start, int endRange, HashSet<TokenKind> startTokens)
         {
             var items = ast.Items;
 
@@ -162,41 +147,6 @@ namespace Cal.Core.SimpleParser
                     }
                 }
             }
-        }
-        public static void CleanSpaces(this LineTokens lineTokens, bool removeEoln = true)
-        {
-            var toRemove = GetIndicesOfTokens(lineTokens, TokenKind.Spaces);
-            toRemove.Reverse();
-            RemoveIndices(lineTokens, toRemove);
-            if (!removeEoln)
-                return;
-            toRemove = GetIndicesOfTokens(lineTokens, TokenKind.Eoln);
-            toRemove.Reverse();
-            RemoveIndices(lineTokens, toRemove);
-        }
-
-
-        private static void RemoveIndices(this LineTokens lineTokens, List<int> toRemove)
-        {
-            var items = lineTokens.Items;
-            foreach (var index in toRemove)
-            {
-                items.RemoveAt(index);
-            }
-        }
-
-        private static List<int> GetIndicesOfTokens(LineTokens lineTokens, TokenKind tokenKind)
-        {
-            var toRemove = new List<int>();
-            var items = lineTokens.Items;
-            for (int index = 0; index < items.Count; index++)
-            {
-                var item = items[index];
-                if (item.Kind!= tokenKind)
-                    continue;
-                toRemove.Add(index);
-            }
-            return toRemove;
         }
     }
 }

@@ -2,9 +2,8 @@
 using System.Linq;
 using Cal.Core.Definitions;
 using Cal.Core.Lexer;
-using Cal.Core.SimpleParser;
 
-namespace Cal.Core.ParseTreeToDefinitions
+namespace Cal.Core.SimpleParser.ParseTreeToDefinitions
 {
     public class DefinitionsBuilder
     {
@@ -43,51 +42,56 @@ namespace Cal.Core.ParseTreeToDefinitions
             }
             program.GlobalClass.AddMethodToClass(methodDefinition);
 
-            ProcessMethodNode(methodDefinition, methodDefinition.MainBody.Scope, item);
+            ProcessMethodNode(methodDefinition.MainBody.Scope, item);
         }
 
-        private void ProcessMethodNode(MethodDefinition methodDefinition, ScopeDefinition scope, AstNode ast)
+        private void ProcessMethodNode(ScopeDefinition scope, AstNode ast)
         {
-            ProcessBodyInstructions(methodDefinition, scope, ast);
+            ProcessBodyInstructions(scope, ast);
         }
 
-        private void ProcessBodyInstructions(MethodDefinition methodDefinition, ScopeDefinition scope, AstNode ast)
+        private void ProcessBodyInstructions(ScopeDefinition scope, AstNode ast)
         {
-            var tokenDefs = ast.Items.Skip(1).ToArray();
+            var tokenDefs = ast.Items.GetRange(1, ast.Items.Count-2).ToArray();
             foreach (var item in tokenDefs)
             {
-                switch (item.NodeKind)
+                var tokenKind = item.NodeKind;
+                switch (tokenKind)
                 {
                     case TokenKind.RwWhile:
-                        ProcesInstructionWhile(item, methodDefinition, scope);
+                        ProcesInstructionWhile(item, scope);
                         break;
                     case TokenKind.RwIf:
-                        ProcesInstructionIf(item, methodDefinition, scope);
+                        ProcesInstructionIf(item, scope);
                         break;
                     default:
-                        ProcessInstructionOrAssign(item, methodDefinition);
+                        ProcessInstructionOrAssign(item, scope);
                         break;
                 }
             }
         }
 
-        private void ProcesInstructionIf(AstNode item, MethodDefinition methodDefinition, ScopeDefinition scope)
+        private void ProcesInstructionIf(AstNode item, ScopeDefinition scope)
         {
-            ProcessBodyInstructions(methodDefinition, scope, item);
+            var ifBlock = new IfDefinition(item);
+            scope.ProcessAddOperation(item, ifBlock);
+            ProcessBodyInstructions(ifBlock.IfBody, item);
         }
 
-        private void ProcesInstructionWhile(AstNode item, MethodDefinition methodDefinition, ScopeDefinition scope)
+        private void ProcesInstructionWhile(AstNode item, ScopeDefinition scope)
         {
-            ProcessBodyInstructions(methodDefinition, scope, item);
+            var whileDefinition = new WhileDefinition(item);
+            scope.ProcessAddOperation(item, whileDefinition);
+            ProcessBodyInstructions(whileDefinition.WhileBody, item);
         }
 
-        private void ProcessInstructionOrAssign(AstNode item, MethodDefinition methodDefinition)
+        private void ProcessInstructionOrAssign(AstNode item, ScopeDefinition scope)
         {
             bool hasAssign = item.RowTokens.Items.Any(token => token.Kind == TokenKind.OpAssign);
             if (!hasAssign)
-                methodDefinition.MainBody.Scope.ProcessAddCall(item);
+                scope.ProcessAddCall(item);
             else
-                methodDefinition.ProcessAssign(item);
+                scope.ProcessAssign(item);
         }
     }
 }

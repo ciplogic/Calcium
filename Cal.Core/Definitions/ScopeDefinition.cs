@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Cal.Core.Lexer;
+using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
 
 namespace Cal.Core.Definitions
@@ -8,6 +10,19 @@ namespace Cal.Core.Definitions
     {
         public ScopeDefinition ParentScope { get; set; }
         public List<InstructionDefinition> Operations { get; set; }
+
+        public MethodDefinition Method
+        {
+            get
+            {
+                var root = this;
+                while (root.ParentScope!=null)
+                {
+                    root = root.ParentScope;
+                }
+                return (MethodDefinition) root.Parent;
+            }
+        }
 
         public List<VariableDefinition> Variables = new List<VariableDefinition>();
 
@@ -22,6 +37,10 @@ namespace Cal.Core.Definitions
         {
             Operations.Add(new CallDefinition(item.RowTokens.Items));
         }
+        public void ProcessAddOperation(AstNode item, InstructionDefinition operation)
+        {
+            Operations.Add(operation);
+        }
 
 
         public VariableDefinition LocateVariable(string name)
@@ -32,6 +51,28 @@ namespace Cal.Core.Definitions
             if (ParentScope == null)
                 return null;
             return ParentScope.LocateVariable(name);
+        }
+
+        public void ProcessAssign(AstNode item)
+        {
+            List<TokenKind> tokenKinds = item.RowTokens.Items
+                .Select(tok => tok.Kind)
+                .ToList();
+            var indexAssignOp = tokenKinds
+                .IndexOf(TokenKind.OpAssign);
+            var assignDefinition = new AssignDefinition();
+            var leftTokens = item.RowTokens.Items.GetRange(0, indexAssignOp);
+            var rightTOkens = item.RowTokens.Items.GetRange(indexAssignOp + 1, tokenKinds.Count - indexAssignOp - 1);
+            assignDefinition.Left = new AssignLeftDefinition(leftTokens);
+            assignDefinition.RightExpression = new ExpressionDefinition(rightTOkens);
+
+            AddInstruction(assignDefinition);
+        }
+
+        private void AddInstruction(AssignDefinition assignDefinition)
+        {
+            Operations.Add(assignDefinition);
+            SemanticAnalysis.AnalyseFirstAssign(assignDefinition, this);
         }
     }
 }

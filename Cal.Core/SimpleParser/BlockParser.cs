@@ -61,11 +61,13 @@ namespace Cal.Core.SimpleParser
         public ParseResult Parse()
         {
             BlockFoldings.FoldComments(Ast, _spacesTokens);
-            BlockFoldings.FoldNodes(Ast, 0, Ast.Items.Count - 1, _startTokens, _endTokens);
+            BlockFoldings.FoldNodes(Ast, 0, Ast.Items.Count - 1, _startTokens);
 
-            ParseResult result = new ParseResult();
-            result.HasErrors = false;
-            result.Ast = Ast;
+            var result = new ParseResult
+            {
+                HasErrors = false, 
+                Ast = Ast
+            };
             return result;
         }
 

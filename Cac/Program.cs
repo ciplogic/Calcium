@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using Cal.Core.CodeGenerator;
 using Cal.Core.Lexer;
-using Cal.Core.ParseTreeToDefinitions;
 using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
+using Cal.Core.SimpleParser.ParseTreeToDefinitions;
 
 #endregion
 
@@ -60,7 +60,7 @@ namespace Cal
             semAnalyisis.Analyze(progDefinition);
             var codeBuilder = new CsCodeGenerator(progDefinition);
             var generatedFiles = codeBuilder.GenerateFilePack(codeBuilder.MultiFile);
-            File.WriteAllText(pathExamples+ CsCodeGenerator.MainCs, generatedFiles[CsCodeGenerator.MainCs]);
+            File.WriteAllText(CsCodeGenerator.MainCs, generatedFiles[CsCodeGenerator.MainCs]);
 
             return;
         }

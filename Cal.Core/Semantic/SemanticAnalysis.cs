@@ -14,8 +14,9 @@ namespace Cal.Core.Semantic
 
         }
 
-        public static void AnalyseFirstAssign(MethodDefinition method, AssignDefinition assign, ScopeDefinition scope)
+        public static void AnalyseFirstAssign(AssignDefinition assign, ScopeDefinition scope)
         {
+            MethodDefinition method = scope.Method;
             var arguments = method.Arguments;
             var variables = scope.Variables;
             List<TokenDef> contentTokens = assign.Left.ContentTokens;

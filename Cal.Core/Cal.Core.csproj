@@ -58,13 +58,14 @@
     <Compile Include="Definitions\ClassDefinition.cs" />
     <Compile Include="Definitions\ClrClassDefinition.cs" />
     <Compile Include="Definitions\ExpressionDefinition.cs" />
+    <Compile Include="Definitions\IfDefinition.cs" />
     <Compile Include="Definitions\InstructionDefinition.cs" />
     <Compile Include="Definitions\MethodDefinition.cs" />
     <Compile Include="Definitions\ProgramDefinition.cs" />
     <Compile Include="Definitions\ScopeDefinition.cs" />
     <Compile Include="Definitions\TypeDefiniton.cs" />
     <Compile Include="Definitions\VariableDefinition.cs" />
-    <Compile Include="ParseTreeToDefinitions\DefinitionsBuilder.cs" />
+    <Compile Include="SimpleParser\ParseTreeToDefinitions\DefinitionsBuilder.cs" />
     <Compile Include="Semantic\SemanticAnalysis.cs" />
     <Compile Include="SimpleParser\AstVisitor.cs" />
     <Compile Include="SimpleParser\BlockFoldings.cs" />
