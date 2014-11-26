@@ -22,6 +22,7 @@ namespace Cal.Core.Definitions
         public override void WriteCode(StringBuilder sb)
         {
             sb.Append("while(");
+            sb.Append(whileExpression);
             sb.Append("){");
             foreach (var instructionDefinition in WhileBody.Operations)
             {
