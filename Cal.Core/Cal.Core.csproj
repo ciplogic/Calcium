@@ -65,6 +65,7 @@
     <Compile Include="Definitions\ScopeDefinition.cs" />
     <Compile Include="Definitions\TypeDefiniton.cs" />
     <Compile Include="Definitions\VariableDefinition.cs" />
+    <Compile Include="Definitions\WhileDefinition.cs" />
     <Compile Include="SimpleParser\ParseTreeToDefinitions\DefinitionsBuilder.cs" />
     <Compile Include="Semantic\SemanticAnalysis.cs" />
     <Compile Include="SimpleParser\AstVisitor.cs" />

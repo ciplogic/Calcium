@@ -15,17 +15,4 @@ namespace Cal.Core.Definitions
             ElseBody = new ScopeDefinition();
         }
     }
-
-    public class WhileDefinition : InstructionDefinition
-    {
-        private readonly AstNode _item;
-
-        public WhileDefinition(AstNode item)
-        {
-            _item = item;
-            WhileBody = new ScopeDefinition();
-        }
-
-        public ScopeDefinition WhileBody { get; set; }
-    }
 }
