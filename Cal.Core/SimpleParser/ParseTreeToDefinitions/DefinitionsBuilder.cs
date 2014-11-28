@@ -39,7 +39,7 @@ namespace Cal.Core.SimpleParser.ParseTreeToDefinitions
                 methodDefinition.ProcessArguments(firstRow.Items.GetRange(2, firstRow.Items.Count - 2));
             }
             program.GlobalClass.AddMethodToClass(methodDefinition);
-
+            methodDefinition.IsStatic = true;
             ProcessMethodNode(methodDefinition.MainBody.Scope, item);
         }
 

@@ -19,6 +19,7 @@ namespace Cal.Core.Definitions
         }
 
         public ClassDefinition TypeDefinition { get; set; }
+        public InstructionDefinition ParentDefinition { get; set; }
 
         public override string ToString()
         {
