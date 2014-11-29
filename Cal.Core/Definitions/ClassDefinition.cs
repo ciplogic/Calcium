@@ -11,7 +11,7 @@ namespace Cal.Core.Definitions
         }
 
         public bool IsClrType { get; set; }
-        public List<MethodDefinition> Defs { get; set; } 
+        public List<MethodDefinition> Defs { get; private set; } 
         public string Namespace { get; set; }
         public string Name { get; set; }
         public ClassDefinition BaseType { get; set; }

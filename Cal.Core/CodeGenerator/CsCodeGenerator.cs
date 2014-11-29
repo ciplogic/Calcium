@@ -10,7 +10,11 @@ namespace Cal.Core.CodeGenerator
         public const string MainCs = "main.cs";
         private readonly ProgramDefinition _definition;
 
-        string[] defaultNamespaces = new string[] { "System", "System.Collection.Generic" };
+        readonly string[] _defaultNamespaces =
+        {
+            "System", 
+            "System.Collection.Generic"
+        };
 
         public bool MultiFile { get; set; }
 
@@ -34,7 +38,7 @@ namespace Cal.Core.CodeGenerator
         private string GenerateAllAsOneFile(ProgramDefinition definition)
         {
             var sb = new StringBuilder();
-            defaultNamespaces.Each(item
+            _defaultNamespaces.Each(item
                 =>sb.AppendFormat("using {0};",item).AppendLine());
             var classDefinitions = definition.Classes;
             foreach (var classDefinition in classDefinitions)

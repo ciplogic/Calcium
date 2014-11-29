@@ -1,6 +1,4 @@
-﻿using System.CodeDom.Compiler;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Linq;
 using System.Text;
 using Cal.Core.SimpleParser;
 
@@ -22,14 +20,8 @@ namespace Cal.Core.Definitions
 
         public override void WriteCode(StringBuilder sb)
         {
-            sb.Append("while(");
-            sb.Append(WhileExpression);
-            sb.Append("){");
-            foreach (var instructionDefinition in WhileBody.Operations)
-            {
-                instructionDefinition.WriteCode(sb);
-            }
-            sb.Append("}"); 
+            sb.Append("while(").Append(WhileExpression).AppendLine(")");
+            WhileBody.WriteCode(sb);
         }
     }
 }

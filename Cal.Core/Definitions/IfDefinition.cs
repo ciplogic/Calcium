@@ -16,7 +16,7 @@ namespace Cal.Core.Definitions
 
         public IfDefinition(AstNode item, ScopeDefinition parentScope)
         {
-            IfExpression = new ExpressionDefinition(item.RowTokens.Range(1));
+            IfExpression = new ExpressionDefinition(item.ChildrenNodes[0].RowTokens.Range(1));
             IfBody = new ScopeDefinition()
             {
                 ParentScope = parentScope
