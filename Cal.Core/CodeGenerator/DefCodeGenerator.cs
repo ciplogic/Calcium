@@ -16,7 +16,7 @@ namespace Cal.Core.CodeGenerator
             }
         }
 
-        private static void GenerateVariablesCode(StringBuilder sb, List<VariableDefinition> variables)
+        public static void GenerateVariablesCode(StringBuilder sb, List<VariableDefinition> variables)
         {
             foreach (var variableDefinition in variables)
             {

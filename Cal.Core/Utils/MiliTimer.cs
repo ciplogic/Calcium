@@ -1,7 +1,6 @@
 #region Usages
 
 using System;
-using System.Collections.Generic;
 
 #endregion
 
@@ -27,17 +26,6 @@ namespace Cal.Core.Utils
         {
             ShowFromStart();
             _start = Environment.TickCount;
-        }
-    }
-
-    public static class CommonExtensions
-    {
-        public static void Each<T>(this IEnumerable<T> collection, Action<T> action)
-        {
-            foreach (var item in collection)
-            {
-                action(item);
-            }
         }
     }
 }

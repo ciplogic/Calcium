@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Cal.Core.CodeGenerator;
 using Cal.Core.Lexer;
 using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
@@ -73,6 +75,17 @@ namespace Cal.Core.Definitions
         {
             Operations.Add(assignDefinition);
             SemanticAnalysis.AnalyseFirstAssign(assignDefinition, this);
+        }
+
+        public void WriteCode(StringBuilder sb)
+        {
+            sb.AppendLine("{");
+            DefCodeGenerator.GenerateVariablesCode(sb, Variables);
+            foreach (var instructionDefinition in Operations)
+            {
+                instructionDefinition.WriteCode(sb);
+            }
+            sb.AppendLine("}");
         }
     }
 }

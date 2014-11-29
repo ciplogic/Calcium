@@ -100,7 +100,7 @@ namespace Cal.Core.SimpleParser
 
         public static void FoldNodes(AstNode ast, int start, int endRange, HashSet<TokenKind> startTokens)
         {
-            var items = ast.Items;
+            var items = ast.ChildrenNodes;
 
             int foundIndex;
             int getLastInRange;
@@ -114,7 +114,7 @@ namespace Cal.Core.SimpleParser
                     if (getLastInRange != -1)
                     {
                         var foldedNode = ast.BuildNonTerminal(getLastInRange, foundIndex, TokenKind.NonTerminal);
-                        var fNodeItems = foldedNode.Items;
+                        var fNodeItems = foldedNode.ChildrenNodes;
                         if (fNodeItems.Count > 0)
                         {
                             foldedNode.NodeKind = fNodeItems.First().RowTokens.Items.First().Kind;
@@ -129,7 +129,7 @@ namespace Cal.Core.SimpleParser
 
         public static void FoldComments(AstNode ast, HashSet<TokenKind> spacesTokens)
         {
-            var items = ast.Items;
+            var items = ast.ChildrenNodes;
             while (true)
             {
                 var endRange = items.Count - 1;

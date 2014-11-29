@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Cal.Core.BlockParser;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser.Strategies;
 
@@ -52,7 +51,7 @@ namespace Cal.Core.SimpleParser
             foreach (var token in tokens)
             {
                 var blockAstNode = new AstNode(token);
-                Ast.Items.Add(blockAstNode);
+                Ast.ChildrenNodes.Add(blockAstNode);
             }
         }
 
@@ -61,7 +60,7 @@ namespace Cal.Core.SimpleParser
         public ParseResult Parse()
         {
             BlockFoldings.FoldComments(Ast, _spacesTokens);
-            BlockFoldings.FoldNodes(Ast, 0, Ast.Items.Count - 1, _startTokens);
+            BlockFoldings.FoldNodes(Ast, 0, Ast.ChildrenNodes.Count - 1, _startTokens);
 
             var result = new ParseResult
             {

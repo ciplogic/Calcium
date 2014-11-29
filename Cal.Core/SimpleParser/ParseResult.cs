@@ -1,6 +1,4 @@
-﻿using Cal.Core.BlockParser;
-
-namespace Cal.Core.SimpleParser
+﻿namespace Cal.Core.SimpleParser
 {
     public class ParseResult
     {

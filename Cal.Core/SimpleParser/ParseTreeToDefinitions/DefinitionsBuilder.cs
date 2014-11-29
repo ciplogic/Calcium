@@ -17,7 +17,7 @@ namespace Cal.Core.SimpleParser.ParseTreeToDefinitions
 
         private void ProcesProgramNode(AstNode ast, ProgramDefinition program)
         {
-            var tokenDefs = ast.Items;
+            var tokenDefs = ast.ChildrenNodes;
             foreach (var item in tokenDefs)
             {
                 switch (item.NodeKind)
@@ -32,7 +32,7 @@ namespace Cal.Core.SimpleParser.ParseTreeToDefinitions
         private void ProcesProgramMethod(AstNode item, ProgramDefinition program)
         {
             var methodDefinition = new MethodDefinition();
-            var firstRow = item.Items[0].RowTokens;
+            var firstRow = item.ChildrenNodes[0].RowTokens;
             methodDefinition.Name = firstRow.Items[1].GetContent();
             if (firstRow.Count > 2)
             {
@@ -45,10 +45,10 @@ namespace Cal.Core.SimpleParser.ParseTreeToDefinitions
 
         private void ProcessMethodNode(ScopeDefinition scope, AstNode ast)
         {
-            ProcessBodyInstructions(scope, ast, ast.Items.GetRange(1, ast.Items.Count-2).ToArray());
+            ProcessBodyInstructions(scope, ast.ChildrenNodes.GetRange(1, ast.ChildrenNodes.Count-2).ToArray());
         }
 
-        private void ProcessBodyInstructions(ScopeDefinition scope, AstNode ast, AstNode[] childNodes)
+        public static void ProcessBodyInstructions(ScopeDefinition scope, AstNode[] childNodes)
         {
             foreach (var item in childNodes)
             {
@@ -68,37 +68,25 @@ namespace Cal.Core.SimpleParser.ParseTreeToDefinitions
             }
         }
 
-        private void ProcesInstructionIf(AstNode item, ScopeDefinition scope)
+        private static void ProcesInstructionIf(AstNode item, ScopeDefinition scope)
         {
-            var ifBlock = new IfDefinition(item)
-            {
-                IfBody =
-                {
-                    ParentScope = scope
-                }, 
-                ElseBody =
-                {
-                    ParentScope = scope
-                }
-            };
+            var ifBlock = new IfDefinition(item,scope);
 
             scope.ProcessAddOperation(item, ifBlock);
-            var childNodes = item.Items.GetRange(1, item.Items.Count-2).ToArray();
-            ProcessBodyInstructions(ifBlock.IfBody, item, childNodes);
         }
 
-        private void ProcesInstructionWhile(AstNode item, ScopeDefinition scope)
+        private static void ProcesInstructionWhile(AstNode item, ScopeDefinition scope)
         {
             var whileDefinition = new WhileDefinition(item)
             {
                 WhileBody = {ParentScope = scope}
             };
             scope.ProcessAddOperation(item, whileDefinition);
-            var childNodes = item.Items.GetRange(1, item.Items.Count-2).ToArray();
-            ProcessBodyInstructions(whileDefinition.WhileBody, item, childNodes);
+            var childNodes = item.ChildrenNodes.GetRange(1, item.ChildrenNodes.Count-2).ToArray();
+            ProcessBodyInstructions(whileDefinition.WhileBody, childNodes);
         }
 
-        private void ProcessInstructionOrAssign(AstNode item, ScopeDefinition scope)
+        private static void ProcessInstructionOrAssign(AstNode item, ScopeDefinition scope)
         {
             bool hasAssign = item.RowTokens.Items.Any(token => token.Kind == TokenKind.OpAssign);
             if (!hasAssign)

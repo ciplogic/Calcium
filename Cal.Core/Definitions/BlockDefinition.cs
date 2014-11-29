@@ -2,7 +2,6 @@
 {
     public class BlockDefinition : BaseDefinition
     {
-
         public ScopeDefinition Scope { get; set; }
         public BlockDefinition()
         {

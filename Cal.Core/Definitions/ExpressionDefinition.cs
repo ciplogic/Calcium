@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
 
@@ -24,6 +25,11 @@ namespace Cal.Core.Definitions
         public override string ToString()
         {
             return ContentTokens.TokenJoinContent(); 
+        }
+
+        public void WriteCode(StringBuilder sb)
+        {
+            sb.Append(ToString());
         }
     }
 }

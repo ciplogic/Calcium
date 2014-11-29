@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cal.Core.Lexer;
 
-namespace Cal.Core.BlockParser
+namespace Cal.Core.SimpleParser
 {
     public class LineTokens
     {
@@ -43,6 +43,12 @@ namespace Cal.Core.BlockParser
             {
                 items.RemoveAt(index);
             }
+        }
+
+        public List<TokenDef> Range(int i)
+        {
+            var result = Items.GetRange(i, Items.Count - i).ToList();
+            return result;
         }
     }
 }

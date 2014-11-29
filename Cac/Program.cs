@@ -61,8 +61,6 @@ namespace Cal
             var codeBuilder = new CsCodeGenerator(progDefinition);
             var generatedFiles = codeBuilder.GenerateFilePack(codeBuilder.MultiFile);
             File.WriteAllText(CsCodeGenerator.MainCs, generatedFiles[CsCodeGenerator.MainCs]);
-
-            return;
         }
     }
 }

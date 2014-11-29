@@ -14,7 +14,7 @@ namespace Cal.Core.Definitions
         public WhileDefinition(AstNode item)
         {
             WhileBody = new ScopeDefinition();
-            WhileExpression = new ExpressionDefinition(item.Items[0].RowTokens.Items.Skip(1).ToList())
+            WhileExpression = new ExpressionDefinition(item.ChildrenNodes[0].RowTokens.Items.Skip(1).ToList())
             {
                 ParentDefinition = this
             };

@@ -1,15 +1,21 @@
 using System.Collections.Generic;
-using Cal.Core.BlockParser;
+using System.Linq;
 using Cal.Core.Lexer;
 
 namespace Cal.Core.SimpleParser
 {
     public class AstNode {
-		public List<AstNode> Items = new List<AstNode>();
+        private readonly List<AstNode> _childrenNodes = new List<AstNode>();
 
 		public LineTokens RowTokens { get; set; }
         public TokenKind NodeKind { get; set; }
-		public AstNode()
+
+        public List<AstNode> ChildrenNodes
+        {
+            get { return _childrenNodes; }
+        }
+
+        public AstNode()
         {
             NodeKind = TokenKind.NonTerminal;
             RowTokens = new LineTokens();
@@ -26,14 +32,28 @@ namespace Cal.Core.SimpleParser
 			var result = new AstNode ();
 			for (var i = startRange; i <= endRange; i++)
 			{
-			    var node = Items[i];
-                result.Items.Add(node);
+			    var node = _childrenNodes[i];
+                result._childrenNodes.Add(node);
 			}
-			Items.RemoveRange(startRange, endRange- startRange+1);
-			Items.Insert (startRange, result);
+			_childrenNodes.RemoveRange(startRange, endRange- startRange+1);
+			_childrenNodes.Insert (startRange, result);
 		    result.NodeKind = parseKind;
 			return result;
 		}
+
+        public List<AstNode> SubRange(int skipStart, int skipEnd)
+        {
+            return _childrenNodes.GetRange(skipStart, _childrenNodes.Count - skipStart - skipEnd).ToList();
+        }
+
+        public List<AstNode> Range(int skipStart, int count)
+        {
+            return _childrenNodes.GetRange(skipStart, count).ToList();
+        }
+        public List<AstNode> SubRange(int skipStart)
+        {
+            return _childrenNodes.GetRange(skipStart, _childrenNodes.Count - skipStart).ToList();
+        } 
 
 	    public override string ToString()
 	    {
