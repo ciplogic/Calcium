@@ -4,6 +4,10 @@ namespace Cal.Core.Definitions
 {
     public class AssignDefinition : InstructionDefinition
     {
+        public AssignDefinition(ScopeDefinition scope) : base(scope)
+        {
+        }
+
         public AssignLeftDefinition Left { get; set; }
 
         public ExpressionDefinition RightExpression { get; set; }

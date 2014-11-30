@@ -8,7 +8,7 @@ namespace Cal.Core.Definitions
 {
     public class CallDefinition : InstructionDefinition
     {
-        public CallDefinition(List<TokenDef> tokenDefs)
+        public CallDefinition(List<TokenDef> tokenDefs, ScopeDefinition scope) : base(scope)
         {
             TokenDefs = tokenDefs;
         }

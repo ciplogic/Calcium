@@ -6,7 +6,7 @@ namespace Cal.Core.Definitions
 {
     public class AssignLeftDefinition : ExpressionDefinition
     {
-        public AssignLeftDefinition(List<TokenDef> tokens) : base(tokens)
+        public AssignLeftDefinition(List<TokenDef> tokens, InstructionDefinition parent) : base(tokens, parent)
         {
         }
     }

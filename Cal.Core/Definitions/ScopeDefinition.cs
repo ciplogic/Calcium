@@ -35,9 +35,9 @@ namespace Cal.Core.Definitions
 
 
 
-        public void ProcessAddCall(AstNode item)
+        public void ProcessAddCall(AstNode item, ScopeDefinition scope)
         {
-            Operations.Add(new CallDefinition(item.RowTokens.Items));
+            Operations.Add(new CallDefinition(item.RowTokens.Items, scope));
         }
         public void ProcessAddOperation(AstNode item, InstructionDefinition operation)
         {
@@ -55,18 +55,18 @@ namespace Cal.Core.Definitions
             return ParentScope.LocateVariable(name);
         }
 
-        public void ProcessAssign(AstNode item)
+        public void ProcessAssign(AstNode item, ScopeDefinition scope)
         {
             List<TokenKind> tokenKinds = item.RowTokens.Items
                 .Select(tok => tok.Kind)
                 .ToList();
             var indexAssignOp = tokenKinds
                 .IndexOf(TokenKind.OpAssign);
-            var assignDefinition = new AssignDefinition();
+            var assignDefinition = new AssignDefinition(scope);
             var leftTokens = item.RowTokens.Items.GetRange(0, indexAssignOp);
             var rightTOkens = item.RowTokens.Items.GetRange(indexAssignOp + 1, tokenKinds.Count - indexAssignOp - 1);
-            assignDefinition.Left = new AssignLeftDefinition(leftTokens);
-            assignDefinition.RightExpression = new ExpressionDefinition(rightTOkens);
+            assignDefinition.Left = new AssignLeftDefinition(leftTokens, assignDefinition);
+            assignDefinition.RightExpression = new ExpressionDefinition(rightTOkens, assignDefinition);
 
             AddInstruction(assignDefinition);
         }

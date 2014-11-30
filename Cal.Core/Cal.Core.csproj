@@ -58,6 +58,12 @@
     <Compile Include="Definitions\ClassDefinition.cs" />
     <Compile Include="Definitions\ClrClassDefinition.cs" />
     <Compile Include="Definitions\ExpressionDefinition.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\ExpressionResolver.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\ExprResolverBase.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\ValueExpression.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\ValueExpressionDouble.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\ValueExpressionT.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\VariableResolved.cs" />
     <Compile Include="Definitions\IfDefinition.cs" />
     <Compile Include="Definitions\InstructionDefinition.cs" />
     <Compile Include="Definitions\MethodDefinition.cs" />

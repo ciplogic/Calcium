@@ -77,10 +77,7 @@ namespace Cal.Core.SimpleParser.ParseTreeToDefinitions
 
         private static void ProcesInstructionWhile(AstNode item, ScopeDefinition scope)
         {
-            var whileDefinition = new WhileDefinition(item)
-            {
-                WhileBody = {ParentScope = scope}
-            };
+            var whileDefinition = new WhileDefinition(item, scope);
             scope.ProcessAddOperation(item, whileDefinition);
             var childNodes = item.ChildrenNodes.GetRange(1, item.ChildrenNodes.Count-2).ToArray();
             ProcessBodyInstructions(whileDefinition.WhileBody, childNodes);
@@ -90,9 +87,9 @@ namespace Cal.Core.SimpleParser.ParseTreeToDefinitions
         {
             bool hasAssign = item.RowTokens.Items.Any(token => token.Kind == TokenKind.OpAssign);
             if (!hasAssign)
-                scope.ProcessAddCall(item);
+                scope.ProcessAddCall(item, scope);
             else
-                scope.ProcessAssign(item);
+                scope.ProcessAssign(item, scope);
         }
     }
 }

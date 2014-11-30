@@ -9,10 +9,14 @@ namespace Cal.Core.Definitions
         public ExpressionDefinition WhileExpression { get; set; }
         public ScopeDefinition WhileBody { get; set; }
 
-        public WhileDefinition(AstNode item)
+        public WhileDefinition(AstNode item, ScopeDefinition scope)
+            : base(scope)
         {
-            WhileBody = new ScopeDefinition();
-            WhileExpression = new ExpressionDefinition(item.ChildrenNodes[0].RowTokens.Items.Skip(1).ToList())
+            WhileBody = new ScopeDefinition()
+            {
+                ParentScope = scope
+            };
+            WhileExpression = new ExpressionDefinition(item.ChildrenNodes[0].RowTokens.Range(1), this)
             {
                 ParentDefinition = this
             };
