@@ -26,7 +26,7 @@ namespace Cal.Core.Definitions
             }
         }
 
-        public List<VariableDefinition> Variables = new List<VariableDefinition>();
+        public readonly List<VariableDefinition> Variables = new List<VariableDefinition>();
 
         public ScopeDefinition()
         {
@@ -65,7 +65,7 @@ namespace Cal.Core.Definitions
             var assignDefinition = new AssignDefinition(scope);
             var leftTokens = item.RowTokens.Items.GetRange(0, indexAssignOp);
             var rightTOkens = item.RowTokens.Items.GetRange(indexAssignOp + 1, tokenKinds.Count - indexAssignOp - 1);
-            assignDefinition.Left = new AssignLeftDefinition(leftTokens, assignDefinition);
+            assignDefinition.Left = new AssignLeftDefinition(leftTokens);
             assignDefinition.RightExpression = new ExpressionDefinition(rightTOkens, assignDefinition);
 
             AddInstruction(assignDefinition);

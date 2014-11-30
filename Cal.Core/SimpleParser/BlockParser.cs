@@ -23,15 +23,11 @@ namespace Cal.Core.SimpleParser
 	            TokenKind.Comment,
 	            TokenKind.Eoln,
 	        };
-            _endTokens = new HashSet<TokenKind>
-            {
-                TokenKind.RwEnd
-            };
         }
 
         HashSet<TokenKind> _startTokens = new HashSet<TokenKind>();
         HashSet<TokenKind> _spacesTokens = new HashSet<TokenKind>();
-        private HashSet<TokenKind> _endTokens;
+        TokenKind[] _startParen = {TokenKind.OpOpenParen};
         public AstNode Ast { get; set; }
 
 
@@ -55,12 +51,10 @@ namespace Cal.Core.SimpleParser
             }
         }
 
-        public readonly List<AstVisitor> TokenVisitors = new List<AstVisitor>();
-
         public ParseResult Parse()
         {
             BlockFoldings.FoldComments(Ast, _spacesTokens);
-            BlockFoldings.FoldNodes(Ast, 0, Ast.ChildrenNodes.Count - 1, _startTokens);
+            BlockFoldings.FoldNodes(Ast, 0, Ast.ChildrenNodes.Count - 1, _startTokens, TokenKind.RwEnd);
 
             var result = new ParseResult
             {
@@ -68,14 +62,6 @@ namespace Cal.Core.SimpleParser
                 Ast = Ast
             };
             return result;
-        }
-
-        private void VisitTokens()
-        {
-            foreach (var visitor in TokenVisitors)
-            {
-                visitor.Visit(Ast);
-            }
         }
     }
 }

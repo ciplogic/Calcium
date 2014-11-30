@@ -87,26 +87,17 @@ namespace Cal.Core.SimpleParser
             return foundIndex;
         }
 
-        public static List<TokenDef> GetTokensRange(this List<TokenDef> tokens, int start, int fromEnd)
-        {
-            var result = new List<TokenDef>();
-            for (var i = start; i < tokens.Count - fromEnd; i++)
-            {
-                result.Add(tokens[i]);
-            }
-            return result;
-        }
 
-
-        public static void FoldNodes(AstNode ast, int start, int endRange, HashSet<TokenKind> startTokens)
+        public static void FoldNodes(AstNode ast, int start, int endRange, IEnumerable<TokenKind> startingTokens, TokenKind endTokenKind)
         {
+            HashSet<TokenKind> startTokens = new HashSet<TokenKind>(startingTokens);
             var items = ast.ChildrenNodes;
 
             int foundIndex;
             int getLastInRange;
             do
             {
-                foundIndex = GetFirstIndexInRange(items, start, endRange, TokenKind.RwEnd);
+                foundIndex = GetFirstIndexInRange(items, start, endRange, endTokenKind);
                 getLastInRange = -1;
                 if (foundIndex != -1)
                 {

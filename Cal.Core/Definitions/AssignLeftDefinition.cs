@@ -1,13 +1,20 @@
 ﻿using System.Collections.Generic;
 using Cal.Core.Lexer;
-using Cal.Core.SimpleParser;
 
 namespace Cal.Core.Definitions
 {
-    public class AssignLeftDefinition : ExpressionDefinition
+    public class AssignLeftDefinition 
     {
-        public AssignLeftDefinition(List<TokenDef> tokens, InstructionDefinition parent) : base(tokens, parent)
+        private readonly List<TokenDef> _tokens;
+
+        public AssignLeftDefinition(List<TokenDef> tokens)
         {
+            _tokens = tokens;
+        }
+
+        public List<TokenDef> Tokens
+        {
+            get { return _tokens; }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Cal.Core.Semantic
             MethodDefinition method = scope.Method;
             var arguments = method.Arguments;
             var variables = scope.Variables;
-            List<TokenDef> contentTokens = assign.Left.ContentTokens;
+            List<TokenDef> contentTokens = assign.Left.Tokens;
             var name = contentTokens[0].GetContent();
 
             AnalyseExpressionType(assign.RightExpression);

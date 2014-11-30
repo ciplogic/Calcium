@@ -8,6 +8,8 @@ namespace Cal.Core.SimpleParser
         private readonly List<AstNode> _childrenNodes = new List<AstNode>();
 
 		public LineTokens RowTokens { get; set; }
+        public TreeTokens Tree { get; set; }
+
         public TokenKind NodeKind { get; set; }
 
         public List<AstNode> ChildrenNodes
@@ -25,6 +27,7 @@ namespace Cal.Core.SimpleParser
 		{
 			RowTokens = tokens;
             NodeKind = TokenKind.Terminal;
+            Tree = new TreeTokens(tokens);
 		}
 
 		public AstNode BuildNonTerminal(int startRange, int endRange, TokenKind parseKind)

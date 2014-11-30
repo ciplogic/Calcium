@@ -24,11 +24,6 @@ namespace Cal.Core.Definitions
         private void EvaluateExpression(List<TokenDef> contentTokens)
         {
             ExpressionResolver.Resolve(this);
-            var unknownIdentifiers = contentTokens.Where(tok => tok.Kind == TokenKind.Identifier);
-            for (var i = 0; i < contentTokens.Count; i++)
-            {
-                
-            }
         }
 
         public List<TokenDef> ContentTokens
