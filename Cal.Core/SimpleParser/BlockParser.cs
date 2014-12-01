@@ -27,7 +27,6 @@ namespace Cal.Core.SimpleParser
 
         HashSet<TokenKind> _startTokens = new HashSet<TokenKind>();
         HashSet<TokenKind> _spacesTokens = new HashSet<TokenKind>();
-        TokenKind[] _startParen = {TokenKind.OpOpenParen};
         public AstNode Ast { get; set; }
 
 
