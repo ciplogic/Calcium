@@ -66,6 +66,10 @@
         OpEquals,
         OpColumn,
         NonTerminal,
-        Terminal
+        Terminal,
+
+        HeadExpression,
+        Scope,
+        FoldedNode
     }
 }

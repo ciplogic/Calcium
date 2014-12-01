@@ -5,7 +5,7 @@ using Cal.Core.Lexer;
 namespace Cal.Core.SimpleParser
 {
     public class AstNode {
-        private readonly List<AstNode> _childrenNodes = new List<AstNode>();
+        private List<AstNode> _childrenNodes = new List<AstNode>();
 
 		public LineTokens RowTokens { get; set; }
         public TreeTokens Tree { get; set; }
@@ -15,6 +15,7 @@ namespace Cal.Core.SimpleParser
         public List<AstNode> ChildrenNodes
         {
             get { return _childrenNodes; }
+            set { _childrenNodes = value; }
         }
 
         public AstNode()

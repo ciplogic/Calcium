@@ -104,18 +104,41 @@ namespace Cal.Core.SimpleParser
                     getLastInRange = GetLastIndexInRange(items, start, foundIndex, startTokens);
                     if (getLastInRange != -1)
                     {
-                        var foldedNode = ast.BuildNonTerminal(getLastInRange, foundIndex, TokenKind.NonTerminal);
-                        var fNodeItems = foldedNode.ChildrenNodes;
-                        if (fNodeItems.Count > 0)
-                        {
-                            foldedNode.NodeKind = fNodeItems.First().RowTokens.Items.First().Kind;
-                        }
+                        var buildNonTerminal = ast.BuildNonTerminal(getLastInRange, foundIndex, TokenKind.NonTerminal);
+                        var foldedNode = FoldBlockNode(buildNonTerminal);
                         endRange = items.Count - 1;
                     }
                 }
 
             } while (foundIndex != -1 && getLastInRange != -1);
 
+        }
+
+        private static AstNode FoldBlockNode(AstNode ast)
+        {
+            var foldedNode = ast;
+
+            var fNodeItems = foldedNode.ChildrenNodes;
+            if (fNodeItems.Count > 0)
+            {
+                foldedNode.NodeKind = fNodeItems.First().RowTokens.Items.First().Kind;
+            }
+            var block = foldedNode.BuildNonTerminal(1, foldedNode.ChildrenNodes.Count - 2, TokenKind.Scope);
+            var lineExpression = new LineTokens
+            {
+                Items = foldedNode.ChildrenNodes[0].RowTokens.Range(1)
+            };
+            var rootToken = foldedNode.ChildrenNodes[0].RowTokens.Items[0];
+            var headLine = new LineTokens();
+            headLine .Add(rootToken);
+            var headNode = new AstNode(headLine);
+            var expressionNode = new AstNode(lineExpression)
+            {
+                NodeKind = TokenKind.HeadExpression
+            };
+            foldedNode.ChildrenNodes = new List<AstNode>(){headNode,expressionNode,block};
+            foldedNode.NodeKind = TokenKind.FoldedNode;
+            return foldedNode;
         }
 
         public static void FoldComments(AstNode ast, HashSet<TokenKind> spacesTokens)
