@@ -31,7 +31,7 @@ namespace Cal.Core.CodeGenerator
 
         private static string CalculateParameterNames(MethodDefinition definition)
         {
-            if (definition.Arguments.Count == 0)
+            if (definition.MethodScope.Variables.Count == 0)
             {
                 return String.Empty;
             }

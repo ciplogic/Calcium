@@ -11,21 +11,21 @@ namespace Cal.Core.Definitions
     public class ExpressionDefinition
     {
         private readonly List<TokenDef> _contentTokens;
-
+        /*
         public ExpressionDefinition(List<TokenDef> contentTokens, InstructionDefinition parentDefinition)
         {
             ChildrenExpressions =new List<ExpressionDefinition>();
             _contentTokens = contentTokens;
             ParentDefinition = parentDefinition;
 
-            EvaluateExpression(contentTokens);
+            EvaluateExpression();
         }
 
-        private void EvaluateExpression(List<TokenDef> contentTokens)
+        private void EvaluateExpression()
         {
             ExpressionResolver.Resolve(this);
         }
-
+        */
         public List<TokenDef> ContentTokens
         {
             get { return _contentTokens; }
@@ -44,6 +44,11 @@ namespace Cal.Core.Definitions
         public void WriteCode(StringBuilder sb)
         {
             sb.Append(ToString());
+        }
+
+        public string ToCode()
+        {
+            return ToString();
         }
     }
 }

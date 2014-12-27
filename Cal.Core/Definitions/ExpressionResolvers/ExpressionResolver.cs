@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cal.Core.Definitions.ExpressionResolvers.Nodes;
 using Cal.Core.Lexer;
 
 namespace Cal.Core.Definitions.ExpressionResolvers
 {
     public class ExprResolverUnsolved : ExprResolverBase
     {
-        
+        public ExprResolverUnsolved() : base(ExpressionKind.Unknown)
+        {
+        }
+
+        public override string ToCode()
+        {
+            throw new NotImplementedException();
+        }
     }
     class ExpressionResolver
     {
@@ -22,30 +30,46 @@ namespace Cal.Core.Definitions.ExpressionResolvers
                 TokenKind.OpSub
             };
         }
-        public static ExprResolverBase Resolve(ExpressionDefinition expressionDefinition)
+        public static ExprResolverBase Resolve(List<TokenDef> tokens, InstructionDefinition instructionDefinition)
         {
-            var tokens = expressionDefinition.ContentTokens;
             var count = tokens.Count;
             if (count == 1)
             {
-                return ResolveIndividual(expressionDefinition, tokens[0]);
+                return ResolveIndividual(instructionDefinition, tokens[0]);
             }
-            if (count == 2 && tokens[0].Kind!=TokenKind.Identifier)
+            if (count == 2 && tokens[0].Kind != TokenKind.Identifier)
             {
-                return ResolveUnary(expressionDefinition, tokens);
+                return ResolveUnary(instructionDefinition, tokens);
             }
-            return HandleMultipleItemsExpression(expressionDefinition);
+            return HandleMultipleItemsExpression(instructionDefinition, tokens);
         }
-
-        private static ExprResolverBase HandleMultipleItemsExpression(ExpressionDefinition expressionDefinition)
+        private static ExprResolverBase HandleMultipleItemsExpression(InstructionDefinition instructionDefinition, List<TokenDef> tokens)
         {
-            var contentTokens = expressionDefinition.ContentTokens;
+            var contentTokens = tokens;
+            if (IsFunction(contentTokens))
+            {
+                return FunctionResolve(contentTokens, instructionDefinition);
+            }
             var binaryTokens = GetBinaryTokens(contentTokens);
             var highestPriorityBinaryToken = ComputeHighestPriorityToken(binaryTokens);
-            var leftTokens = expressionDefinition.ContentTokens.GetRange(0, highestPriorityBinaryToken.Key);
-            var rightTokens = expressionDefinition.ContentTokens.GetRange(highestPriorityBinaryToken.Key + 1, expressionDefinition.ContentTokens.Count - highestPriorityBinaryToken.Key - 1);
-            var binaryExpression = new ExprBinaryResolved(highestPriorityBinaryToken.Value, leftTokens,rightTokens,expressionDefinition);
+            var leftTokens = tokens.GetRange(0, highestPriorityBinaryToken.Key);
+            var rightTokens = tokens.GetRange(highestPriorityBinaryToken.Key + 1, tokens.Count - highestPriorityBinaryToken.Key - 1);
+            var binaryExpression = new BinaryExpression(highestPriorityBinaryToken.Value, leftTokens,rightTokens,instructionDefinition);
             return binaryExpression;
+        }
+
+        private static ExprResolverBase FunctionResolve(List<TokenDef> contentTokens, InstructionDefinition instructionDefinition)
+        {
+            ExprResolverBase result = new FunctionCallResolved(contentTokens, instructionDefinition);
+            return result;
+        }
+
+        private static bool IsFunction(List<TokenDef> contentTokens)
+        {
+            if (contentTokens[0].Kind == TokenKind.Identifier &&
+                contentTokens[1].Kind == TokenKind.OpOpenParen)
+                return true;
+            return false;
         }
 
         private static KeyValuePair<int, TokenDef> ComputeHighestPriorityToken(Dictionary<int, TokenDef> binaryTokens)
@@ -89,14 +113,14 @@ namespace Cal.Core.Definitions.ExpressionResolvers
         }
 
 
-        private static ExprResolverBase ResolveUnary(ExpressionDefinition expressionDefinition, List<TokenDef> tokens)
+        private static ExprResolverBase ResolveUnary(InstructionDefinition expressionDefinition, List<TokenDef> tokens)
         {
             ExprResolverBase result = new ExprUnaryResolved(tokens[0], tokens.GetRange(1, tokens.Count - 1), expressionDefinition);
 
             return result;
         }
 
-        private static ExprResolverBase ResolveIndividual(ExpressionDefinition expressionDefinition, TokenDef contentToken)
+        private static ExprResolverBase ResolveIndividual(InstructionDefinition instructionDefinition, TokenDef contentToken)
         {
             switch (contentToken.Kind)
             {
@@ -104,8 +128,10 @@ namespace Cal.Core.Definitions.ExpressionResolvers
                     return new ValueExpressionDouble(contentToken);
                 case TokenKind.Integer:
                     return new ValueExpressionDouble(contentToken);
+                case TokenKind.OpSingleQuote:
+                    return new ValueExpressionString(contentToken);
                 case TokenKind.Identifier:
-                    return ResolveVariableOrFunction(expressionDefinition, contentToken);
+                    return ResolveVariableOrFunction(instructionDefinition, contentToken);
 
 
             }
@@ -113,13 +139,14 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             throw new NotImplementedException();
         }
 
-        private static ExprResolverBase ResolveVariableOrFunction(ExpressionDefinition expressionDefinition, TokenDef contentToken)
+        private static ExprResolverBase ResolveVariableOrFunction(InstructionDefinition expressionDefinition, TokenDef contentToken)
         {
-            var parentScope = expressionDefinition.ParentDefinition.Scope;
+            var parentScope = expressionDefinition.Scope;
             var content = contentToken.GetContent();
             var variable = parentScope.LocateVariable(content);
             if (variable == null)
             {
+                if (content!="true")
                 throw new NotImplementedException();
             }
             ExprResolverBase result = new VariableResolved(variable);

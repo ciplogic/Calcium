@@ -1,6 +1,6 @@
 ﻿using Cal.Core.Lexer;
 
-namespace Cal.Core.Definitions.ExpressionResolvers
+namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
 {
     public class ValueExpressionT<T> : ValueExpression
     {

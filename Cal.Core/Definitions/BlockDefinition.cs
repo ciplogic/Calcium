@@ -3,9 +3,9 @@
     public class BlockDefinition : BaseDefinition
     {
         public ScopeDefinition Scope { get; set; }
-        public BlockDefinition()
+        public BlockDefinition(ScopeDefinition scope, string name)
         {
-            Scope = new ScopeDefinition();
+            Scope = new ScopeDefinition(scope, name);
         }
     }
 }

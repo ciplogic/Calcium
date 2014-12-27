@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Cal.Core.Definitions
 {
@@ -13,6 +14,7 @@ namespace Cal.Core.Definitions
 
         public virtual void WriteCode(StringBuilder sb)
         {
+            throw new NotImplementedException();
             sb.AppendLine("//not implemented");
         }
     }

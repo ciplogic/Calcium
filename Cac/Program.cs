@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Cal.Core.CodeGenerator;
+using Cal.Core.Definitions;
 using Cal.Core.Lexer;
 using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
-using Cal.Core.SimpleParser.ParseTreeToDefinitions;
 
 #endregion
 

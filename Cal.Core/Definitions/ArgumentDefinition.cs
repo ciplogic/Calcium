@@ -3,7 +3,7 @@ using Cal.Core.Lexer;
 
 namespace Cal.Core.Definitions
 {
-    public class ArgumentDefinition
+    public class ArgumentDefinition : VariableDefinition
     {
         public VariableDefinition Variable { get; set; }
         public List<TokenDef> Tokens { get; set; }
@@ -20,7 +20,7 @@ namespace Cal.Core.Definitions
             byToken.RemoveAll(tok => tok.Kind == TokenKind.OpColumn);
             Tokens = byToken;
             Variable.Name = Tokens[0].GetContent();
-            Variable.Type = new ClassDefinition()
+            Variable.Type = new ClassDefinition(null)
             {
                 Name = Tokens[1].GetContent()
             };

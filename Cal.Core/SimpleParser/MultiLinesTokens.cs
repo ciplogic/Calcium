@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Cal.Core.Lexer;
 
-namespace Cal.Core.SimpleParser.Strategies
+namespace Cal.Core.SimpleParser
 {
     class MultiLinesTokens
     {

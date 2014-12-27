@@ -1,30 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cal.Core.Definitions.ExpressionResolvers;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
-using Cal.Core.SimpleParser.ParseTreeToDefinitions;
 using Cal.Core.Utils;
 
 namespace Cal.Core.Definitions
 {
     public class IfDefinition : InstructionDefinition
     {
-        public ExpressionDefinition IfExpression { get; set; }
+        public ExprResolverBase IfExpression { get; set; }
         public ScopeDefinition IfBody { get; set; }
         public ScopeDefinition ElseBody { get; set; }
 
         public IfDefinition(AstNode item, ScopeDefinition parentScope) : base(parentScope)
         {
-            IfExpression = new ExpressionDefinition(item.ChildrenNodes[0].RowTokens.Range(1), this);
-            IfBody = new ScopeDefinition()
-            {
-                ParentScope = parentScope
-            };
-            ElseBody = new ScopeDefinition()
-            {
-                ParentScope = parentScope
-            };
+            IfExpression = ExpressionResolver.Resolve(item.ChildrenNodes[0].RowTokens.Range(1), this);
+            IfBody = new ScopeDefinition(parentScope, "IfBody");
+            ElseBody = new ScopeDefinition(parentScope, "ElseBody");
             
             Process(item);
         }
@@ -59,7 +53,7 @@ namespace Cal.Core.Definitions
         public override void WriteCode(StringBuilder sb)
         {
             sb.Append("if(");
-            IfExpression.WriteCode(sb);
+            sb.AppendFormat(IfExpression.ToCode());
             sb.Append(")");
             IfBody.WriteCode(sb);
            

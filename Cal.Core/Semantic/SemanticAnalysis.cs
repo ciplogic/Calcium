@@ -16,32 +16,29 @@ namespace Cal.Core.Semantic
 
         public static void AnalyseFirstAssign(AssignDefinition assign, ScopeDefinition scope)
         {
-            MethodDefinition method = scope.Method;
-            var arguments = method.Arguments;
             var variables = scope.Variables;
             List<TokenDef> contentTokens = assign.Left.Tokens;
             var name = contentTokens[0].GetContent();
 
-            AnalyseExpressionType(assign.RightExpression);
+            //AnalyseExpressionType(assign.RightExpression);
 
-            if (arguments.All(arg => arg.Variable.Name != name) 
-                && scope.LocateVariable(name) == null)
+            if ( scope.LocateVariable(name) == null)
             {
                 var variableDefinition = new VariableDefinition {Name = name};
                 variables.Add(variableDefinition);
-                
+                /*
                 variableDefinition.Type = assign.RightExpression.TypeDefinition;
                 if (variableDefinition.Type == null)
                 {
                     Console.WriteLine(assign);
-                }
+                }*/
             }
             
         }
 
         private static void AnalyseExpressionType(ExpressionDefinition rightExpression)
         {
-                    var content = rightExpression.ContentTokens;
+            var content = rightExpression.ContentTokens;
             if (content.Count == 1)
             {
                 switch (content[0].Kind)

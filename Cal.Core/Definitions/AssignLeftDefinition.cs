@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cal.Core.Lexer;
 
 namespace Cal.Core.Definitions
@@ -15,6 +16,15 @@ namespace Cal.Core.Definitions
         public List<TokenDef> Tokens
         {
             get { return _tokens; }
+        }
+
+        public string ToCode()
+        {
+            if (Tokens.Count == 1)
+            {
+                return Tokens[0].GetContent();
+            }
+            throw new NotImplementedException();
         }
     }
 }
