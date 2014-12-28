@@ -16,7 +16,7 @@ namespace Cal.Core.Definitions
 
         public IfDefinition(AstNode item, ScopeDefinition parentScope) : base(parentScope)
         {
-            IfExpression = ExpressionResolver.Resolve(item.ChildrenNodes[0].RowTokens.Range(1), this);
+            IfExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, this);
             IfBody = new ScopeDefinition(parentScope, "IfBody");
             ElseBody = new ScopeDefinition(parentScope, "ElseBody");
             
@@ -25,10 +25,11 @@ namespace Cal.Core.Definitions
 
 		void Process(AstNode astNode)
 		{
+            astNode = astNode.ChildrenNodes[2];
 			var containsElse = astNode.ChildrenNodes.IndexOfT(IsElseToken);
 		    if (containsElse == -1)
 		    {
-		        ProcessIfBody(IfBody, astNode.SubRange(1,1).ToList());
+		        ProcessIfBody(IfBody, astNode.ChildrenNodes);
 		    }
 		    else
 		    {

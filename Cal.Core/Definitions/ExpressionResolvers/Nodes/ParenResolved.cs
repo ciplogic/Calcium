@@ -5,17 +5,17 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
 {
     public class ParenResolved : ExprResolverBase
     {
-        private readonly List<TokenDef> _contentTokens;
+        public ExprResolverBase InnerExpression { get; set; }
 
-        public ParenResolved(List<TokenDef> contentTokens)
+        public ParenResolved(List<TokenDef> contentTokens, InstructionDefinition instructionDefinition)
             : base(ExpressionKind.Parentheses)
         {
-            _contentTokens = contentTokens;
+            InnerExpression = ExpressionResolver.Resolve(contentTokens, instructionDefinition);
         }
 
         public override string ToCode()
         {
-            throw new System.NotImplementedException();
+            return string.Format("({0})", InnerExpression.ToCode());
         }
     }
 }

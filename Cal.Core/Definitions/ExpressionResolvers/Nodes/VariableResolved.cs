@@ -12,7 +12,8 @@
 
         public override string ToCode()
         {
-            throw new System.NotImplementedException();
+
+            return _variable==null? "UNKNOWN": _variable.Name;
         }
     }
 }

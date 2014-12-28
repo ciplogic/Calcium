@@ -13,7 +13,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
         public TokenDef Definition { get; set; }
         public override string ToCode()
         {
-            throw new System.NotImplementedException();
+            return Definition.GetContent();
         }
     }
 }

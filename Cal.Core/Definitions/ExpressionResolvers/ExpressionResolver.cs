@@ -25,7 +25,13 @@ namespace Cal.Core.Definitions.ExpressionResolvers
 
             _binaryOperators = new[]
             {
+                TokenKind.OpEquals,
+                TokenKind.OpGreaterThan,
+                TokenKind.OpGreaterStrict,
                 TokenKind.OpLessThan,
+                TokenKind.OpLessStrict,
+                TokenKind.OpMul,
+                TokenKind.OpDiv,
                 TokenKind.OpAdd,
                 TokenKind.OpSub
             };
@@ -50,12 +56,33 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             {
                 return FunctionResolve(contentTokens, instructionDefinition);
             }
+            if (IsParen(contentTokens))
+            {
+                return ParenResolve(contentTokens, instructionDefinition);
+            }
             var binaryTokens = GetBinaryTokens(contentTokens);
             var highestPriorityBinaryToken = ComputeHighestPriorityToken(binaryTokens);
             var leftTokens = tokens.GetRange(0, highestPriorityBinaryToken.Key);
             var rightTokens = tokens.GetRange(highestPriorityBinaryToken.Key + 1, tokens.Count - highestPriorityBinaryToken.Key - 1);
             var binaryExpression = new BinaryExpression(highestPriorityBinaryToken.Value, leftTokens,rightTokens,instructionDefinition);
             return binaryExpression;
+        }
+
+        private static ExprResolverBase ParenResolve(List<TokenDef> contentTokens, InstructionDefinition instructionDefinition)
+        {
+            var resolvedParen = new ParenResolved(contentTokens.GetRange(1, contentTokens.Count-2), instructionDefinition);
+            return resolvedParen;
+        }
+
+        private static bool IsParen(List<TokenDef> contentTokens)
+        {
+            if (contentTokens.Count <= 2)
+                return false;
+            if (contentTokens[0].Kind != TokenKind.OpOpenParen)
+                return false;
+            if (contentTokens[contentTokens.Count-1].Kind != TokenKind.OpCloseParen)
+                return false;
+            return true;
         }
 
         private static ExprResolverBase FunctionResolve(List<TokenDef> contentTokens, InstructionDefinition instructionDefinition)
@@ -125,9 +152,11 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             switch (contentToken.Kind)
             {
                 case TokenKind.Double:
-                    return new ValueExpressionDouble(contentToken);
+                    return new ValueExpression(contentToken);
                 case TokenKind.Integer:
-                    return new ValueExpressionDouble(contentToken);
+                    return new ValueExpression(contentToken);
+                case TokenKind.Boolean:
+                    return new ValueExpression(contentToken);
                 case TokenKind.OpSingleQuote:
                     return new ValueExpressionString(contentToken);
                 case TokenKind.Identifier:
@@ -146,7 +175,6 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             var variable = parentScope.LocateVariable(content);
             if (variable == null)
             {
-                if (content!="true")
                 throw new NotImplementedException();
             }
             ExprResolverBase result = new VariableResolved(variable);

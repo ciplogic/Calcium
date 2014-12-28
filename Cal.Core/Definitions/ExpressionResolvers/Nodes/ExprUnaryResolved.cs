@@ -24,7 +24,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
 
         public override string ToCode()
         {
-            throw new System.NotImplementedException();
+            return string.Format("{0} {1}", TokenDef.GetContent(), RightDefinition.ToCode());
         }
     }
 }

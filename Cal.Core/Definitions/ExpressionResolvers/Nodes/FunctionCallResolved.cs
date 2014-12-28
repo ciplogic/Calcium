@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
 
@@ -27,7 +28,10 @@ namespace Cal.Core.Definitions.ExpressionResolvers
 
         public override string ToCode()
         {
-            throw new System.NotImplementedException();
+            return
+                string.Format("{0}({1})", FunctionName,
+                    string.Join(",", ArgumentCalls.Select(arg => arg.ToCode()))
+                    );
         }
     }
 }

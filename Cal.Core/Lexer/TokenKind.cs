@@ -70,6 +70,7 @@
 
         HeadExpression,
         Scope,
-        FoldedNode
+        FoldedNode,
+        Boolean
     }
 }

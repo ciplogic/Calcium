@@ -67,7 +67,6 @@
     <Compile Include="Definitions\ExpressionResolvers\Nodes\FunctionCallResolved.cs" />
     <Compile Include="Definitions\ExpressionResolvers\TokenUtils.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpression.cs" />
-    <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpressionDouble.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpressionString.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpressionT.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\VariableResolved.cs" />

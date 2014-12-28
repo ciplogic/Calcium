@@ -22,6 +22,8 @@ namespace Cal.Core.Lexer.Matchers
             AddReservedWord(dict, "while", TokenKind.RwWhile);
             AddReservedWord(dict, "self", TokenKind.RwSelf);
             AddReservedWord(dict, "do", TokenKind.RwDo);
+            AddReservedWord(dict, "true", TokenKind.Boolean);
+            AddReservedWord(dict, "false", TokenKind.Boolean);
 
             _index = BuildIndex(dict);
         }
