@@ -17,7 +17,13 @@ namespace Cal.Core.Lexer
             return Tokenize(allLines);
         }
 
-        private static List<TokenDef> Tokenize(string[] allLines)
+        public static List<TokenDef> TokenizeText(string text)
+        {
+            var allLines = text.Split(new[] {'\n'}, StringSplitOptions.None);
+            return Tokenize(allLines);
+        }
+
+        public static List<TokenDef> Tokenize(string[] allLines)
         {
             var tokens = new List<TokenDef>();
             

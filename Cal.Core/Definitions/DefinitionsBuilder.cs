@@ -53,6 +53,15 @@ namespace Cal.Core.Definitions
             ProcessBodyInstructions(scope, ast.ChildrenNodes[2].ChildrenNodes.ToArray());
         }
 
+
+        public static ScopeDefinition BuildScopeFromOperations(ScopeDefinition parentScope, string titleScope, AstNode[] rangeNodes)
+        {
+            var buildScope = new ScopeDefinition(parentScope, titleScope);
+            var elseBranchOps = rangeNodes;
+            ProcessBodyInstructions(buildScope, elseBranchOps);
+            return buildScope;
+        }
+
         public static void ProcessBodyInstructions(ScopeDefinition scope, AstNode[] childNodes)
         {
             foreach (var item in childNodes)

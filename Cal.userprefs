@@ -1,16 +1,23 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|Mixed Platforms" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Cac\Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Cal.Core\RecursiveParser\ProductionAst.cs">
     <Files>
       <File FileName="Cal.Core\Definitions\IfDefinition.cs" Line="1" Column="1" />
-      <File FileName="Cac\Tests\PrintSomething.rb" Line="9" Column="9" />
-      <File FileName="Cac\Program.cs" Line="53" Column="53" />
+      <File FileName="Cac\Tests\PrintSomething.rb" Line="1" Column="1" />
+      <File FileName="Cac\Program.cs" Line="1" Column="1" />
+      <File FileName="Tests.Cal\RecParserTests.cs" Line="1" Column="1" />
+      <File FileName="Cal.Core\RecursiveParser\ProductionAst.cs" Line="3" Column="3" />
     </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="C:\Oss\StatRubyCompiler\Tests.Cal\IronRubyParsing.cs" line="40" column="1" />
-      <Breakpoint file="C:\Oss\Calcium\Calcium\Cac\Program.cs" line="59" column="1" />
+      <Breakpoint file="C:\Oss\Calcium\Calcium\Cac\Program.cs" line="71" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

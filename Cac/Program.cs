@@ -48,8 +48,13 @@ namespace Cal
 
         public static void Main(string[] args)
         {
+			EvaluateFractalMirah ();
+        }
+
+        private static void EvaluateFractalMirah()
+        {
             string pathExamples = @"c:\Oss\mirah-0.0.12\examples\";
-            var fileName = pathExamples+"fractal.mirah";
+            var fileName = pathExamples + "fractal.mirah";
             var lexer = new QuickLexer();
             var tokens = lexer.Scan(fileName);
             var parser = new BlockParser(tokens);
