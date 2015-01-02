@@ -6,20 +6,17 @@ using Cal.Core.SimpleParser;
 
 namespace Cal.Core.Definitions
 {
-    public class MethodDefinition : BaseDefinition
+    public class MethodDefinition : BlockDefinition
     {
         public MethodDefinition(ScopeDefinition scope)
+            : base(scope, "Def body")
         {
             ReturnType = new ClrClassDefinition(typeof(void));
-            MethodScope = new ScopeDefinition(scope, "Def scope");
-            MainBody = new BlockDefinition(MethodScope, "Def body");
         }
 
         public string Name { get; set; }
         public ClassDefinition DeclaringType { get; set; }
-        public ScopeDefinition MethodScope { get; private set; }
         public ClassDefinition ReturnType { get; set; }
-        public BlockDefinition MainBody { get; set; }
         public bool IsStatic { get; set; }
 
 
@@ -34,7 +31,7 @@ namespace Cal.Core.Definitions
 
         public override string ToString()
         {
-            return String.Format("def {0}({1})", Name, String.Join(",", MethodScope.Variables));
+            return String.Format("def {0}({1})", Name, String.Join(",", Scope.Variables));
         }
 
         public void ProcessArguments(List<TokenDef> argumentTokens)
@@ -44,15 +41,14 @@ namespace Cal.Core.Definitions
             {
                 var arg = new ArgumentDefinition();
                 arg.ProcessDefinition(byToken);
-                MethodScope.Variables.Add(arg);
-                MainBody.Scope.AddVariable(arg.Variable);
+                Scope.AddVariable(arg.Variable);
             }
         }
 
         public string CalculateArgumetsHeader()
         {
             var argumentData = new List<string>(
-                    MethodScope.Variables.Select(arg => ((ArgumentDefinition)arg).ComputedText())
+                    Scope.Variables.Select(arg => ((ArgumentDefinition)arg).ComputedText())
                 );
             return String.Join(", ", argumentData);
         }

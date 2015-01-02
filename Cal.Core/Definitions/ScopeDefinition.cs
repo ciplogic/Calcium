@@ -3,9 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Cal.Core.CodeGenerator;
-using Cal.Core.Definitions.ExpressionResolvers;
-using Cal.Core.Lexer;
-using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
 
 namespace Cal.Core.Definitions
@@ -15,6 +12,7 @@ namespace Cal.Core.Definitions
         public ScopeDefinition ParentScope { get; set; }
         public string Name { get; set; }
         public List<InstructionDefinition> Operations { get; set; }
+        public readonly List<VariableDefinition> Variables = new List<VariableDefinition>();
 
         public MethodDefinition Method
         {
@@ -29,7 +27,6 @@ namespace Cal.Core.Definitions
             }
         }
 
-        public readonly List<VariableDefinition> Variables = new List<VariableDefinition>();
 
         public ScopeDefinition(ScopeDefinition scope, string name)
         {

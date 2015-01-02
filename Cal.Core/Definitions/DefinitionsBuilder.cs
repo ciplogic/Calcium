@@ -48,7 +48,7 @@ namespace Cal.Core.Definitions
             methodDefinition.ProcessMethodHeader(firstRow);
             methodDefinition.IsStatic = true;
             program.GlobalClass.AddMethodToClass(methodDefinition);
-            ProcessBodyInstructions(methodDefinition.MainBody.Scope, item.ChildrenNodes[2].ChildrenNodes.ToArray());
+            ProcessBodyInstructions(methodDefinition.Scope, item.ChildrenNodes[2].ChildrenNodes.ToArray());
         }
 
 

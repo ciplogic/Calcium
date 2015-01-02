@@ -9,7 +9,7 @@ namespace Cal.Core.CodeGenerator
     {
         public static void WriteCodeBody(StringBuilder sb, MethodDefinition methodDefinition)
         {
-            var operations = methodDefinition.MainBody.Scope.Operations;
+            var operations = methodDefinition.Scope.Operations;
             foreach (var instructionDefinition in operations)
             {
                 instructionDefinition.WriteCode(sb);
@@ -31,7 +31,7 @@ namespace Cal.Core.CodeGenerator
 
         private static string CalculateParameterNames(MethodDefinition definition)
         {
-            if (definition.MethodScope.Variables.Count == 0)
+            if (definition.Scope.Variables.Count == 0)
             {
                 return String.Empty;
             }
@@ -53,7 +53,7 @@ namespace Cal.Core.CodeGenerator
             sb.AppendFormat("public {0} {1} ({2})", returnTypeName, methodDefinition.Name,
                 CalculateParameterNames(methodDefinition))
                 .AppendLine().AppendLine("{");
-            GenerateVariablesCode(sb, methodDefinition.MainBody.Scope.Variables);
+            GenerateVariablesCode(sb, methodDefinition.Scope.Variables);
             WriteCodeBody(sb, methodDefinition);
             sb.AppendLine("}");
         }
