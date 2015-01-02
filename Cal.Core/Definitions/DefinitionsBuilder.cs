@@ -43,24 +43,24 @@ namespace Cal.Core.Definitions
 
         private void ProcesProgramMethod(AstNode item, ProgramDefinition program)
         {
-            var methodDefinition = new MethodDefinition(program.GlobalClass.ClassScope);
+            var methodDefinition = new MethodDefinition(program.GlobalClass);
             var firstRow = item.ChildrenNodes[1].RowTokens;
             methodDefinition.ProcessMethodHeader(firstRow);
             methodDefinition.IsStatic = true;
             program.GlobalClass.AddMethodToClass(methodDefinition);
-            ProcessBodyInstructions(methodDefinition.Scope, item.ChildrenNodes[2].ChildrenNodes.ToArray());
+            ProcessBodyInstructions(methodDefinition, item.ChildrenNodes[2].ChildrenNodes.ToArray());
         }
 
 
-        public static ScopeDefinition BuildScopeFromOperations(ScopeDefinition parentScope, string titleScope, AstNode[] rangeNodes)
+        public static BlockDefinition BuildScopeFromOperations(BlockDefinition parentScope, string titleScope, AstNode[] rangeNodes, BlockKind kind)
         {
-            var buildScope = new ScopeDefinition(parentScope, titleScope);
+            var buildScope = new BlockDefinition(parentScope.Scope, titleScope, kind);
             var elseBranchOps = rangeNodes;
             ProcessBodyInstructions(buildScope, elseBranchOps);
             return buildScope;
         }
 
-        public static void ProcessBodyInstructions(ScopeDefinition scope, AstNode[] childNodes)
+        public static void ProcessBodyInstructions(BlockDefinition scope, AstNode[] childNodes)
         {
             foreach (var item in childNodes)
             {
@@ -80,17 +80,17 @@ namespace Cal.Core.Definitions
             }
         }
 
-        private static void ProcesInstructionIf(AstNode item, ScopeDefinition scope)
+        private static void ProcesInstructionIf(AstNode item, BlockDefinition scope)
         {
-            var ifBlock = new IfDefinition(item,scope);
+            var ifBlock = new IfDefinition(item, scope);
 
-            scope.ProcessAddOperation(ifBlock);
+            scope.Scope.ProcessAddOperation(ifBlock);
         }
 
-        private static void ProcesInstructionWhile(AstNode item, ScopeDefinition scope)
+        private static void ProcesInstructionWhile(AstNode item, BlockDefinition scope)
         {
             var whileDefinition = new WhileDefinition(item, scope);
-            scope.ProcessAddOperation(whileDefinition);
+            scope.Scope.ProcessAddOperation(whileDefinition);
             AstNode[] childNodes = item.ChildrenNodes[2].ChildrenNodes.ToArray();
             ProcessBodyInstructions(whileDefinition.WhileBody, childNodes);
         }
@@ -105,20 +105,20 @@ namespace Cal.Core.Definitions
         	return AssignTokenKinds.Contains( token.Kind);
         }
 
-        private static void ProcessInstructionOrAssign(AstNode item, ScopeDefinition scope)
+        private static void ProcessInstructionOrAssign(AstNode item, BlockDefinition blockDefinition)
         {
             var tokenKinds = item.RowTokens.Items;
             bool hasAssign = tokenKinds.Any(IsAssignOperator);
             if (!hasAssign)
-                scope.ProcessAddCall(item, scope);
+                blockDefinition.Scope.ProcessAddCall(item, blockDefinition.Scope);
             else
             {
 
                 var indexAssignOp = tokenKinds
                     .IndexOfT(IsAssignOperator);
-                var assign = new AssignDefinition(scope, item, indexAssignOp);
-                scope.Operations.Add(assign);
-                SemanticAnalysis.AnalyseFirstAssign(assign, scope);
+                var assign = new AssignDefinition(blockDefinition, item, indexAssignOp);
+                blockDefinition.Scope.Operations.Add(assign);
+                SemanticAnalysis.AnalyseFirstAssign(assign, blockDefinition.Scope);
             }
         }
     }

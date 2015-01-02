@@ -1,4 +1,5 @@
 ﻿using System;
+using Cal.Core.Runtime;
 
 namespace Cal.Runtime
 {
@@ -9,12 +10,13 @@ namespace Cal.Runtime
         {
             Console.WriteLine(toDisplay);
         }
-		public static void puts(){
-			Console.WriteLine();
-		}
+        public static void puts()
+        {
+            Console.WriteLine();
+        }
         public static void print(string toDisplay)
         {
-			Console.Write (toDisplay);
+            Console.Write(toDisplay);
         }
     }
 }

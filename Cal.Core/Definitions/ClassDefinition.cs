@@ -2,13 +2,13 @@
 
 namespace Cal.Core.Definitions
 {
-    public class ClassDefinition : BaseDefinition
+    public class ClassDefinition : BlockDefinition
     {
-        public ClassDefinition(ScopeDefinition programScope)
+        public ClassDefinition(ProgramDefinition programScope)
+            : base(programScope.Scope, "Class", BlockKind.Class)
         {
             Defs = new List<MethodDefinition>();
             Interfaces = new List<ClassDefinition>();
-            ClassScope = new ScopeDefinition(programScope, "Class Scope");
         }
 
         public bool IsClrType { get; set; }
@@ -17,7 +17,6 @@ namespace Cal.Core.Definitions
         public string Name { get; set; }
         public ClassDefinition BaseType { get; set; }
         public List<ClassDefinition> Interfaces { get; set; }
-        public ScopeDefinition ClassScope { get; set; }
 
         public void AddMethodToClass(MethodDefinition methodDefinition)
         {

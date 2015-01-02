@@ -9,7 +9,8 @@ namespace Cal.Core.Definitions
 {
     public class AssignDefinition : InstructionDefinition
     {
-        public AssignDefinition(ScopeDefinition scope, AstNode item, int indexAssign) : base(scope)
+        public AssignDefinition(BlockDefinition blockDefinition, AstNode item, int indexAssign)
+            : base(blockDefinition.Scope)
         {
             var tokenDefs = item.RowTokens.Items;
             List<TokenKind> tokenKinds = tokenDefs
@@ -18,7 +19,7 @@ namespace Cal.Core.Definitions
             var leftTokens = tokenDefs.GetRange(0, indexAssign);
             var rightTOkens = tokenDefs.GetRange(indexAssign + 1, tokenKinds.Count - indexAssign - 1);
             AssignToken = tokenDefs[indexAssign];
-            Left = new AssignLeftDefinition(leftTokens, scope);
+            Left = new AssignLeftDefinition(leftTokens, blockDefinition);
             RightExpression = ExpressionResolver.Resolve(rightTOkens, this);
             AddLeftIfOneToken(Left);
         }

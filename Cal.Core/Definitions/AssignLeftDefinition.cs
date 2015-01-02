@@ -10,7 +10,7 @@ namespace Cal.Core.Definitions
         private readonly List<TokenDef> _tokens;
         public ReferenceValueDefinition ReferenceDefinition { get; set; }
 
-        public AssignLeftDefinition(List<TokenDef> tokens, ScopeDefinition parentScope)
+        public AssignLeftDefinition(List<TokenDef> tokens, BlockDefinition parentScope)
         {
             ReferenceDefinition = ReferenceResolver.Resolve(tokens, parentScope);
             _tokens = tokens;

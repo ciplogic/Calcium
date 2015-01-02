@@ -13,14 +13,14 @@ namespace Cal.Core.Definitions
             Variable = new VariableDefinition();
         }
 
-        public void ProcessDefinition(List<TokenDef> byToken)
+        public void ProcessDefinition(List<TokenDef> byToken, ProgramDefinition programScope)
         {
             byToken.RemoveAll(tok => tok.Kind == TokenKind.OpOpenParen);
             byToken.RemoveAll(tok => tok.Kind == TokenKind.OpCloseParen);
             byToken.RemoveAll(tok => tok.Kind == TokenKind.OpColumn);
             Tokens = byToken;
             Variable.Name = Tokens[0].GetContent();
-            Variable.Type = new ClassDefinition(null)
+            Variable.Type = new ClassDefinition(programScope)
             {
                 Name = Tokens[1].GetContent()
             };

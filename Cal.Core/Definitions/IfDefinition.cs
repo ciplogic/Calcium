@@ -9,27 +9,31 @@ namespace Cal.Core.Definitions
     public class IfDefinition : InstructionDefinition
     {
         public ExprResolverBase IfExpression { get; private set; }
-        public ScopeDefinition IfBody { get; set; }
-        public ScopeDefinition ElseBody { get; set; }
+        public BlockDefinition IfBody { get; set; }
+        public BlockDefinition ElseBody { get; set; }
 
-        public IfDefinition(AstNode item, ScopeDefinition parentScope) : base(parentScope)
+        public IfDefinition(AstNode item, BlockDefinition parentScope) : base(parentScope.Scope)
         {
             IfExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, this);
             Process(item, parentScope);
         }
 
-		void Process(AstNode astNode, ScopeDefinition parentScope)
+		void Process(AstNode astNode, BlockDefinition parentScope)
 		{
             astNode = astNode.ChildrenNodes[2];
 			var containsElse = astNode.ChildrenNodes.IndexOfT(IsElseToken);
 		    if (containsElse == -1)
 		    {
-                IfBody = DefinitionsBuilder.BuildScopeFromOperations(parentScope, "IfBody", astNode.ChildrenNodes.ToArray());
+                IfBody = DefinitionsBuilder.BuildScopeFromOperations(parentScope, "IfBody", 
+                    astNode.ChildrenNodes.ToArray(), 
+                    BlockKind.Instruction);
 		    }
 		    else
 		    {
-                IfBody = DefinitionsBuilder.BuildScopeFromOperations(parentScope, "IfBody", astNode.Range(0, containsElse).ToArray());
-                ElseBody = DefinitionsBuilder.BuildScopeFromOperations(parentScope, "ElseBody", astNode.SubRange(containsElse + 1, 0).ToArray()); 
+                IfBody = DefinitionsBuilder.BuildScopeFromOperations(parentScope, "IfBody", 
+                    astNode.Range(0, containsElse).ToArray(), BlockKind.Instruction);
+                ElseBody = DefinitionsBuilder.BuildScopeFromOperations(parentScope, "ElseBody", 
+                    astNode.SubRange(containsElse + 1, 0).ToArray(), BlockKind.Instruction); 
 		    }
 		}
 
@@ -45,12 +49,12 @@ namespace Cal.Core.Definitions
             sb.Append("if(");
             sb.AppendFormat(IfExpression.ToCode());
             sb.Append(")");
-            IfBody.WriteCode(sb);
+            IfBody.Scope.WriteCode(sb);
            
             if (ElseBody!=null)
             {
                 sb.AppendLine("else");
-                ElseBody.WriteCode(sb);
+                ElseBody.Scope.WriteCode(sb);
             }
         }
     }

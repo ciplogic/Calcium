@@ -2,23 +2,22 @@
 
 namespace Cal.Core.Definitions
 {
-    public class ProgramDefinition : BaseDefinition
+    public class ProgramDefinition : BlockDefinition
     {
         public List<ClassDefinition> Classes { get; set; }
         public ClassDefinition GlobalClass;
-        public ScopeDefinition ProgramScope = new ScopeDefinition(null, "Program scope");
-
-        public ProgramDefinition()
+        
+        public ProgramDefinition() : base(null, "Program", BlockKind.Program)
         {
             Classes = new List<ClassDefinition>();
 
-            GlobalClass = new ClassDefinition(ProgramScope)
+            GlobalClass = new ClassDefinition(this)
             {
                 Name = "_Global",
                 Namespace = "Cal"
             };
             Classes.Add(GlobalClass);
-            var methodDefinition = new MethodDefinition(GlobalClass.ClassScope)
+            var methodDefinition = new MethodDefinition(GlobalClass)
             {
                 Name = "Main",
                 IsStatic = true

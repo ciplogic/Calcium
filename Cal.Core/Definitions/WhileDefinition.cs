@@ -8,19 +8,19 @@ namespace Cal.Core.Definitions
     public class WhileDefinition : InstructionDefinition
     {
         public ExprResolverBase WhileExpression { get; set; }
-        public ScopeDefinition WhileBody { get; private set; }
+        public BlockDefinition WhileBody { get; private set; }
 
-        public WhileDefinition(AstNode item, ScopeDefinition scope)
-            : base(scope)
+        public WhileDefinition(AstNode item, BlockDefinition scope)
+            : base(scope.Scope)
         {
-            WhileBody = new ScopeDefinition(scope, "While body");
+            WhileBody = new BlockDefinition(scope.Scope, "While body",BlockKind.Instruction);
             WhileExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, this);
         }
 
         public override void WriteCode(StringBuilder sb)
         {
             sb.Append("while(").Append(WhileExpression.ToCode()).AppendLine(")");
-            WhileBody.WriteCode(sb);
+            WhileBody.Scope.WriteCode(sb);
         }
     }
 }

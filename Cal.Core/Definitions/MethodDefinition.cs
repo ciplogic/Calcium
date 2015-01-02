@@ -8,9 +8,10 @@ namespace Cal.Core.Definitions
 {
     public class MethodDefinition : BlockDefinition
     {
-        public MethodDefinition(ScopeDefinition scope)
-            : base(scope, "Def body")
+        public MethodDefinition(BlockDefinition scope)
+            : base(scope.Scope, "Def body", BlockKind.Method)
         {
+            ParentScope = scope;
             ReturnType = new ClrClassDefinition(typeof(void));
         }
 
@@ -18,6 +19,7 @@ namespace Cal.Core.Definitions
         public ClassDefinition DeclaringType { get; set; }
         public ClassDefinition ReturnType { get; set; }
         public bool IsStatic { get; set; }
+        public BlockDefinition ParentScope { get; private set; }
 
 
         public void ProcessMethodHeader(LineTokens firstRow)
@@ -40,7 +42,7 @@ namespace Cal.Core.Definitions
             foreach (var byToken in splitByTokens)
             {
                 var arg = new ArgumentDefinition();
-                arg.ProcessDefinition(byToken);
+                arg.ProcessDefinition(byToken, DeclaringType.ProgramScope);
                 Scope.AddVariable(arg.Variable);
             }
         }
