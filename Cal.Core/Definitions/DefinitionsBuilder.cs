@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Cal.Core.Lexer;
+using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
+using Cal.Core.Utils;
 
 namespace Cal.Core.Definitions
 {
@@ -45,12 +48,7 @@ namespace Cal.Core.Definitions
             methodDefinition.ProcessMethodHeader(firstRow);
             methodDefinition.IsStatic = true;
             program.GlobalClass.AddMethodToClass(methodDefinition);
-            ProcessMethodNode(methodDefinition.MainBody.Scope, item);
-        }
-
-        private void ProcessMethodNode(ScopeDefinition scope, AstNode ast)
-        {
-            ProcessBodyInstructions(scope, ast.ChildrenNodes[2].ChildrenNodes.ToArray());
+            ProcessBodyInstructions(methodDefinition.MainBody.Scope, item.ChildrenNodes[2].ChildrenNodes.ToArray());
         }
 
 
@@ -86,24 +84,42 @@ namespace Cal.Core.Definitions
         {
             var ifBlock = new IfDefinition(item,scope);
 
-            scope.ProcessAddOperation(item, ifBlock);
+            scope.ProcessAddOperation(ifBlock);
         }
 
         private static void ProcesInstructionWhile(AstNode item, ScopeDefinition scope)
         {
             var whileDefinition = new WhileDefinition(item, scope);
-            scope.ProcessAddOperation(item, whileDefinition);
+            scope.ProcessAddOperation(whileDefinition);
             AstNode[] childNodes = item.ChildrenNodes[2].ChildrenNodes.ToArray();
             ProcessBodyInstructions(whileDefinition.WhileBody, childNodes);
+        }
+        
+        static readonly HashSet<TokenKind> AssignTokenKinds = new HashSet<TokenKind>{
+        	TokenKind.OpAddBy,
+        	TokenKind.OpAssign
+        };
+        
+        static bool IsAssignOperator(TokenDef token)
+        {
+        	return AssignTokenKinds.Contains( token.Kind);
         }
 
         private static void ProcessInstructionOrAssign(AstNode item, ScopeDefinition scope)
         {
-            bool hasAssign = item.RowTokens.Items.Any(token => token.Kind == TokenKind.OpAssign);
+            var tokenKinds = item.RowTokens.Items;
+            bool hasAssign = tokenKinds.Any(IsAssignOperator);
             if (!hasAssign)
                 scope.ProcessAddCall(item, scope);
             else
-                scope.ProcessAssign(item, scope);
+            {
+
+                var indexAssignOp = tokenKinds
+                    .IndexOfT(IsAssignOperator);
+                var assign = new AssignDefinition(scope, item, indexAssignOp);
+                scope.Operations.Add(assign);
+                SemanticAnalysis.AnalyseFirstAssign(assign, scope);
+            }
         }
     }
 }

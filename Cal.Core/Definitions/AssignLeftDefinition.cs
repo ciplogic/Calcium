@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Lexer;
 
 namespace Cal.Core.Definitions
@@ -7,9 +8,11 @@ namespace Cal.Core.Definitions
     public class AssignLeftDefinition 
     {
         private readonly List<TokenDef> _tokens;
+        public ReferenceValueDefinition ReferenceDefinition { get; set; }
 
-        public AssignLeftDefinition(List<TokenDef> tokens)
+        public AssignLeftDefinition(List<TokenDef> tokens, ScopeDefinition parentScope)
         {
+            ReferenceDefinition = ReferenceResolver.Resolve(tokens, parentScope);
             _tokens = tokens;
         }
 

@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Cal.Core.CodeGenerator;
 using Cal.Core.Definitions;
+using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Lexer;
 using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
@@ -53,6 +55,11 @@ namespace Cal
 
         private static void EvaluateFractalMirah()
         {
+            var assemblyRuntimePath = Path.Combine(Directory.GetCurrentDirectory(), "Cal.Runtime.dll");
+            var assemblyRuntime = Assembly.LoadFile(assemblyRuntimePath);
+
+            ReferenceResolver.Instance.ScanGlobalMethods(assemblyRuntime);
+
             string pathExamples = @"c:\Oss\mirah-0.0.12\examples\";
             var fileName = pathExamples + "fractal.mirah";
             var lexer = new QuickLexer();

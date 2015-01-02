@@ -14,6 +14,7 @@ namespace Cal.Core.Definitions
 
         public IfDefinition(AstNode item, ScopeDefinition parentScope) : base(parentScope)
         {
+            IfExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, this);
             Process(item, parentScope);
         }
 
@@ -46,7 +47,7 @@ namespace Cal.Core.Definitions
             sb.Append(")");
             IfBody.WriteCode(sb);
            
-            if (ElseBody.Operations.Count > 0)
+            if (ElseBody!=null)
             {
                 sb.AppendLine("else");
                 ElseBody.WriteCode(sb);

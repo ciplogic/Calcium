@@ -42,7 +42,8 @@ namespace Cal.Core.Definitions
         {
             Operations.Add(new CallDefinition(item.RowTokens.Items, scope));
         }
-        public void ProcessAddOperation(AstNode item, InstructionDefinition operation)
+
+        public void ProcessAddOperation(InstructionDefinition operation)
         {
             Operations.Add(operation);
         }
@@ -56,36 +57,6 @@ namespace Cal.Core.Definitions
             if (ParentScope == null)
                 return null;
             return ParentScope.LocateVariable(name);
-        }
-
-        public void ProcessAssign(AstNode item, ScopeDefinition scope)
-        {
-            List<TokenKind> tokenKinds = item.RowTokens.Items
-                .Select(tok => tok.Kind)
-                .ToList();
-            var indexAssignOp = tokenKinds
-                .IndexOf(TokenKind.OpAssign);
-            var assignDefinition = new AssignDefinition(scope);
-            var leftTokens = item.RowTokens.Items.GetRange(0, indexAssignOp);
-            var rightTOkens = item.RowTokens.Items.GetRange(indexAssignOp + 1, tokenKinds.Count - indexAssignOp - 1);
-            assignDefinition.Left = new AssignLeftDefinition(leftTokens);
-            assignDefinition.RightExpression = ExpressionResolver.Resolve(rightTOkens, assignDefinition);
-            AddLeftIfOneToken(assignDefinition.Left);
-            AddInstruction(assignDefinition);
-        }
-
-        private void AddLeftIfOneToken(AssignLeftDefinition left)
-        {
-            if(left.Tokens.Count!=1)
-                return;
-            var firstToken = left.Tokens[0];
-            AddVariable(firstToken.GetContent());
-        }
-
-        private void AddInstruction(AssignDefinition assignDefinition)
-        {
-            Operations.Add(assignDefinition);
-            SemanticAnalysis.AnalyseFirstAssign(assignDefinition, this);
         }
 
         public void WriteCode(StringBuilder sb)

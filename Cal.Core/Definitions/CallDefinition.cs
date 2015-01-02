@@ -1,28 +1,52 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cal.Core.Definitions.ExpressionResolvers;
 using Cal.Core.Lexer;
-using Cal.Core.SimpleParser;
 
 namespace Cal.Core.Definitions
 {
     public class CallDefinition : InstructionDefinition
     {
+        public List<TokenDef> CallingClass { get; set; }
+        public string MethodName { get; set; }
+        public List<ExprResolverBase> Arguments { get; set; }
+
         public CallDefinition(List<TokenDef> tokenDefs, ScopeDefinition scope) : base(scope)
         {
-            TokenDefs = tokenDefs;
+            CallingClass = new List<TokenDef>();
+            Arguments = new List<ExprResolverBase>();
+            var hasParen = tokenDefs.Any(tok => tok.Kind == TokenKind.OpOpenParen);
+            if (!hasParen)
+            {
+                EvaluateWithoutParen(tokenDefs);
+            }
         }
 
-        public List<TokenDef> TokenDefs { get; set; }
-
+        private void EvaluateWithoutParen(List<TokenDef> tokenDefs)
+        {
+            MethodName = tokenDefs[0].GetContent();
+            for (int i = 1; i < tokenDefs.Count; i++)
+            {
+                var tok = tokenDefs[i];
+                var tokenAsList = new List<TokenDef>{tok};
+                Arguments.Add(ExpressionResolver.Resolve(tokenAsList, this));
+            }
+        }
+        
         public override string ToString()
         {
-            return TokenDefs.TokenJoinContent();
+            var sb = new StringBuilder();
+            WriteCode(sb);
+            return sb.ToString();
         }
 
         public override void WriteCode(StringBuilder sb)
         {
-            sb.AppendLine(TokenDefs.TokenJoinContent() + ";"); 
+            sb.Append(MethodName);
+            sb.AppendFormat("({0});",
+                string.Join(", ", Arguments.Select(arg => arg.ToCode())));
+            sb.AppendLine();
         }
     }
 }

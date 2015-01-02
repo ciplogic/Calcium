@@ -45,14 +45,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -63,6 +59,10 @@
     <ProjectReference Include="..\Cal.Core\Cal.Core.csproj">
       <Project>{7B98202F-91C8-4FBD-8F50-9041C58F8FB1}</Project>
       <Name>Cal.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cal.Runtime\Cal.Runtime.csproj">
+      <Project>{3e19b50d-d835-43e2-a6d9-051238fbe885}</Project>
+      <Name>Cal.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

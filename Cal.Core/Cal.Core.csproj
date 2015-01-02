@@ -62,13 +62,15 @@
     <Compile Include="Definitions\ExpressionResolvers\Nodes\FunctionCallResolved.cs" />
     <Compile Include="Definitions\ExpressionResolvers\TokenUtils.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpression.cs" />
-    <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpressionString.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpressionT.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\VariableResolved.cs" />
+    <Compile Include="Definitions\IdentifierDefinition\ReferenceResolver.cs" />
     <Compile Include="Definitions\IfDefinition.cs" />
     <Compile Include="Definitions\InstructionDefinition.cs" />
     <Compile Include="Definitions\MethodDefinition.cs" />
     <Compile Include="Definitions\ProgramDefinition.cs" />
+    <Compile Include="Definitions\IdentifierDefinition\ReferenceValueDefinition.cs" />
+    <Compile Include="Definitions\ReferenceValueKind.cs" />
     <Compile Include="Definitions\ScopeDefinition.cs" />
     <Compile Include="Definitions\TypeDefiniton.cs" />
     <Compile Include="Definitions\VariableDefinition.cs" />

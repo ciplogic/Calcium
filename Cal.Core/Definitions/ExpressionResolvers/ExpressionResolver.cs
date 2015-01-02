@@ -152,17 +152,15 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             switch (contentToken.Kind)
             {
                 case TokenKind.Double:
-                    return new ValueExpression(contentToken);
+                    return new ValueExpressionT<double>(contentToken, double.Parse);
                 case TokenKind.Integer:
-                    return new ValueExpression(contentToken);
+                    return new ValueExpressionT<int>(contentToken, int.Parse);
                 case TokenKind.Boolean:
-                    return new ValueExpression(contentToken);
+                    return new ValueExpressionT<bool>(contentToken, bool.Parse);
                 case TokenKind.OpSingleQuote:
-                    return new ValueExpressionString(contentToken);
+                    return new ValueExpressionT<string>(contentToken, s=>s);
                 case TokenKind.Identifier:
                     return ResolveVariableOrFunction(instructionDefinition, contentToken);
-
-
             }
             
             throw new NotImplementedException();
