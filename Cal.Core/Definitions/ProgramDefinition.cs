@@ -5,11 +5,16 @@ namespace Cal.Core.Definitions
     public class ProgramDefinition : BlockDefinition
     {
         public List<ClassDefinition> Classes { get; set; }
-        public static ProgramDefinition Instance { get; set; }
+        public static ProgramDefinition Instance { get; private set; }
 
         public ClassDefinition GlobalClass;
-        
-        public ProgramDefinition() : base(null, "Program", BlockKind.Program)
+
+        static ProgramDefinition()
+        {
+            Instance = new ProgramDefinition();
+        }
+
+        ProgramDefinition() : base(null, "Program", BlockKind.Program)
         {
             Instance = this;
             Classes = new List<ClassDefinition>();
@@ -24,7 +29,6 @@ namespace Cal.Core.Definitions
             {
                 Name = "Main",
                 IsStatic = true
-            
             };
             GlobalClass.AddMethodToClass(methodDefinition);
         }

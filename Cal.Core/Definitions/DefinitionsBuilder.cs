@@ -13,18 +13,16 @@ namespace Cal.Core.Definitions
         public ProgramDefinition Build(ParseResult result)
         {
             if (result.HasErrors) return null;
-            var program=new ProgramDefinition();
+            var program = ProgramDefinition.Instance;
             ProcesProgramNode(result.Ast, program);
             return program;
         }
 
         static TokenKind GetFoldNodeKind(AstNode ast)
         {
-            if (ast.NodeKind == TokenKind.FoldedNode)
-            {
-                return ast.ChildrenNodes[0].RowTokens.Items[0].Kind;
-            }
-            return TokenKind.None;
+            return ast.NodeKind == TokenKind.FoldedNode
+                ? ast.ChildrenNodes[0].RowTokens.Items[0].Kind
+                : TokenKind.None;
         }
 
         private void ProcesProgramNode(AstNode ast, ProgramDefinition program)
@@ -38,17 +36,22 @@ namespace Cal.Core.Definitions
                     case TokenKind.RwDef:
                         ProcesProgramMethod(item, program);
                         break;
+                    default:
+                        var mainMethod = program.GlobalClass.Defs.First(def => def.Name == "Main");
+                        ProcessInstructionInBlock(mainMethod, item);
+                        break;
                 }
             }
         }
 
         private void ProcesProgramMethod(AstNode item, ProgramDefinition program)
         {
-            var methodDefinition = new MethodDefinition(program.GlobalClass);
+            var globalClass = ProgramDefinition.Instance.GlobalClass;
+            var methodDefinition = new MethodDefinition(globalClass);
             var firstRow = item.ChildrenNodes[1].RowTokens;
             methodDefinition.ProcessMethodHeader(firstRow);
             methodDefinition.IsStatic = true;
-            program.GlobalClass.AddMethodToClass(methodDefinition);
+            globalClass.AddMethodToClass(methodDefinition);
             ProcessBodyInstructions(methodDefinition, item.ChildrenNodes[2].ChildrenNodes.ToArray());
         }
 
@@ -65,19 +68,24 @@ namespace Cal.Core.Definitions
         {
             foreach (var item in childNodes)
             {
-                var tokenKind = GetFoldNodeKind(item);
-                switch (tokenKind)
-                {
-                    case TokenKind.RwWhile:
-                        ProcesInstructionWhile(item, scope);
-                        break;
-                    case TokenKind.RwIf:
-                        ProcesInstructionIf(item, scope);
-                        break;
-                    default:
-                        ProcessInstructionOrAssign(item, scope);
-                        break;
-                }
+                ProcessInstructionInBlock(scope, item);
+            }
+        }
+
+        private static void ProcessInstructionInBlock(BlockDefinition scope, AstNode item)
+        {
+            var tokenKind = GetFoldNodeKind(item);
+            switch (tokenKind)
+            {
+                case TokenKind.RwWhile:
+                    ProcesInstructionWhile(item, scope);
+                    break;
+                case TokenKind.RwIf:
+                    ProcesInstructionIf(item, scope);
+                    break;
+                default:
+                    ProcessInstructionOrAssign(item, scope);
+                    break;
             }
         }
 
@@ -95,15 +103,15 @@ namespace Cal.Core.Definitions
             AstNode[] childNodes = item.ChildrenNodes[2].ChildrenNodes.ToArray();
             ProcessBodyInstructions(whileDefinition.WhileBody, childNodes);
         }
-        
+
         static readonly HashSet<TokenKind> AssignTokenKinds = new HashSet<TokenKind>{
         	TokenKind.OpAddBy,
         	TokenKind.OpAssign
         };
-        
+
         static bool IsAssignOperator(TokenDef token)
         {
-        	return AssignTokenKinds.Contains( token.Kind);
+            return AssignTokenKinds.Contains(token.Kind);
         }
 
         private static void ProcessInstructionOrAssign(AstNode item, BlockDefinition blockDefinition)
@@ -113,8 +121,8 @@ namespace Cal.Core.Definitions
             if (!hasAssign)
             {
                 ExprResolverBase instructionResolver = ExpressionResolver.ResolveMethod(tokenKinds, blockDefinition);
-                if(instructionResolver.Kind==ExpressionKind.FunctionCall)
-                blockDefinition.Scope.ProcessAddCall(item, blockDefinition, instructionResolver);
+                if (instructionResolver.Kind == ExpressionKind.FunctionCall)
+                    blockDefinition.Scope.ProcessAddCall(item, blockDefinition, instructionResolver);
                 else
                 {
                     blockDefinition.Scope.AddResolvedOperation(instructionResolver, blockDefinition);
