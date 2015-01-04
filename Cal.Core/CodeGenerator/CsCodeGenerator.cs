@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using Cal.Core.Definitions;
 using Cal.Core.Utils;
@@ -10,7 +11,7 @@ namespace Cal.Core.CodeGenerator
         public const string MainCs = "main.cs";
         private readonly ProgramDefinition _definition;
 
-        readonly string[] _defaultNamespaces =
+        static readonly List<string> DefaultNamespaces = new List<string>
         {
             "System", 
             "System.Collections.Generic"
@@ -21,6 +22,12 @@ namespace Cal.Core.CodeGenerator
         public CsCodeGenerator(ProgramDefinition definition)
         {
             _definition = definition;
+        }
+
+        public static void AddNamespace(string ns)
+        {
+            if(!DefaultNamespaces.Contains(ns))
+                DefaultNamespaces.Add(ns);
         }
 
         public Dictionary<string, string> GenerateFilePack(bool multiFile)
@@ -38,7 +45,7 @@ namespace Cal.Core.CodeGenerator
         private string GenerateAllAsOneFile(ProgramDefinition definition)
         {
             var sb = new StringBuilder();
-            _defaultNamespaces.Each(item
+            DefaultNamespaces.Each(item
                 =>sb.AppendFormat("using {0};",item).AppendLine());
             var classDefinitions = definition.Classes;
             foreach (var classDefinition in classDefinitions)
