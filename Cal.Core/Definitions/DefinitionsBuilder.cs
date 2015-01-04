@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Cal.Core.Definitions.Assigns;
 using Cal.Core.Lexer;
 using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
@@ -54,7 +55,7 @@ namespace Cal.Core.Definitions
 
         public static BlockDefinition BuildScopeFromOperations(BlockDefinition parentScope, string titleScope, AstNode[] rangeNodes, BlockKind kind)
         {
-            var buildScope = new BlockDefinition(parentScope.Scope, titleScope, kind);
+            var buildScope = new BlockDefinition(parentScope, titleScope, kind);
             var elseBranchOps = rangeNodes;
             ProcessBodyInstructions(buildScope, elseBranchOps);
             return buildScope;
@@ -110,10 +111,9 @@ namespace Cal.Core.Definitions
             var tokenKinds = item.RowTokens.Items;
             bool hasAssign = tokenKinds.Any(IsAssignOperator);
             if (!hasAssign)
-                blockDefinition.Scope.ProcessAddCall(item, blockDefinition.Scope);
+                blockDefinition.Scope.ProcessAddCall(item, blockDefinition);
             else
             {
-
                 var indexAssignOp = tokenKinds
                     .IndexOfT(IsAssignOperator);
                 var assign = new AssignDefinition(blockDefinition, item, indexAssignOp);

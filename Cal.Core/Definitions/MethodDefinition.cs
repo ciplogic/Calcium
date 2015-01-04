@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
 
@@ -9,9 +10,10 @@ namespace Cal.Core.Definitions
     public class MethodDefinition : BlockDefinition
     {
         public MethodDefinition(BlockDefinition scope)
-            : base(scope.Scope, "Def body", BlockKind.Method)
+            : base(scope, "Def body", BlockKind.Method)
         {
             ParentScope = scope;
+            Arguments = new List<ArgumentDefinition>();
             ReturnType = new ClrClassDefinition(typeof(void));
         }
 
@@ -20,6 +22,7 @@ namespace Cal.Core.Definitions
         public ClassDefinition ReturnType { get; set; }
         public bool IsStatic { get; set; }
         public BlockDefinition ParentScope { get; private set; }
+        public List<ArgumentDefinition> Arguments { get; set; } 
 
 
         public void ProcessMethodHeader(LineTokens firstRow)
@@ -29,6 +32,17 @@ namespace Cal.Core.Definitions
             {
                 ProcessArguments(firstRow.Items.GetRange(1, firstRow.Items.Count - 1));
             }
+        }
+
+        public override ReferenceValueDefinition LocateVariable(TokenDef tokenDef)
+        {
+            var argumentName = tokenDef.GetContent();
+            var foundArgument = Arguments.FirstOrDefault(arg => arg.Name == argumentName);
+            if (foundArgument != null)
+            {
+                return new ReferenceVariableDefinition(foundArgument);
+            }
+            return base.LocateVariable(tokenDef);
         }
 
         public override string ToString()
@@ -42,15 +56,15 @@ namespace Cal.Core.Definitions
             foreach (var byToken in splitByTokens)
             {
                 var arg = new ArgumentDefinition();
-                arg.ProcessDefinition(byToken, DeclaringType.ProgramScope);
-                Scope.AddVariable(arg.Variable);
+                arg.ProcessDefinition(byToken);
+                Arguments.Add(arg);
             }
         }
 
         public string CalculateArgumetsHeader()
         {
             var argumentData = new List<string>(
-                    Scope.Variables.Select(arg => ((ArgumentDefinition)arg).ComputedText())
+                    Arguments.Select(arg => arg.ComputedText())
                 );
             return String.Join(", ", argumentData);
         }

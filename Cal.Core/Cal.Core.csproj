@@ -45,8 +45,8 @@
     <Compile Include="CodeGenerator\CsCodeGenerator.cs" />
     <Compile Include="CodeGenerator\DefCodeGenerator.cs" />
     <Compile Include="Definitions\ArgumentDefinition.cs" />
-    <Compile Include="Definitions\AssignDefinition.cs" />
-    <Compile Include="Definitions\AssignLeftDefinition.cs" />
+    <Compile Include="Definitions\Assigns\AssignDefinition.cs" />
+    <Compile Include="Definitions\Assigns\AssignLeftDefinition.cs" />
     <Compile Include="Definitions\BaseDefinition.cs" />
     <Compile Include="Definitions\BlockDefinition.cs" />
     <Compile Include="Definitions\BlockKind.cs" />
@@ -72,6 +72,7 @@
     <Compile Include="Definitions\ProgramDefinition.cs" />
     <Compile Include="Definitions\IdentifierDefinition\ReferenceValueDefinition.cs" />
     <Compile Include="Definitions\ReferenceValueKind.cs" />
+    <Compile Include="Definitions\ReferenceVariableDefinition.cs" />
     <Compile Include="Definitions\ScopeDefinition.cs" />
     <Compile Include="Definitions\TypeDefiniton.cs" />
     <Compile Include="Definitions\VariableDefinition.cs" />

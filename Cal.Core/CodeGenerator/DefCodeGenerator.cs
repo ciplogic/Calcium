@@ -22,6 +22,8 @@ namespace Cal.Core.CodeGenerator
             {
                 if (variableDefinition.Type == null)
                 {
+                    sb.AppendFormat("dynamic {0};", variableDefinition.Name);
+                    sb.AppendLine();
                     continue;
                 }
                 sb.AppendFormat("{0} {1};", variableDefinition.Type.Name, variableDefinition.Name);

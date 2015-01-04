@@ -12,7 +12,7 @@ namespace Cal.Core.Definitions
         public string MethodName { get; set; }
         public List<ExprResolverBase> Arguments { get; set; }
 
-        public CallDefinition(List<TokenDef> tokenDefs, ScopeDefinition scope) : base(scope)
+        public CallDefinition(List<TokenDef> tokenDefs, BlockDefinition scope) : base(scope)
         {
             CallingClass = new List<TokenDef>();
             Arguments = new List<ExprResolverBase>();

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Cal.Core.Definitions.ExpressionResolvers;
 using Cal.Core.SimpleParser;
 
@@ -11,9 +10,9 @@ namespace Cal.Core.Definitions
         public BlockDefinition WhileBody { get; private set; }
 
         public WhileDefinition(AstNode item, BlockDefinition scope)
-            : base(scope.Scope)
+            : base(scope)
         {
-            WhileBody = new BlockDefinition(scope.Scope, "While body",BlockKind.Instruction);
+            WhileBody = new BlockDefinition(scope, "While body",BlockKind.Instruction);
             WhileExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, this);
         }
 

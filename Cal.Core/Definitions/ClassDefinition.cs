@@ -4,9 +4,12 @@ namespace Cal.Core.Definitions
 {
     public class ClassDefinition : BlockDefinition
     {
+        public ProgramDefinition ProgramScope { get; set; }
+
         public ClassDefinition(ProgramDefinition programScope)
-            : base(programScope.Scope, "Class", BlockKind.Class)
+            : base(programScope, "Class", BlockKind.Class)
         {
+            ProgramScope = programScope;
             Defs = new List<MethodDefinition>();
             Interfaces = new List<ClassDefinition>();
         }

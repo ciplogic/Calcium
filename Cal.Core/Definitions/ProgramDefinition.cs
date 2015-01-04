@@ -5,10 +5,13 @@ namespace Cal.Core.Definitions
     public class ProgramDefinition : BlockDefinition
     {
         public List<ClassDefinition> Classes { get; set; }
+        public static ProgramDefinition Instance { get; set; }
+
         public ClassDefinition GlobalClass;
         
         public ProgramDefinition() : base(null, "Program", BlockKind.Program)
         {
+            Instance = this;
             Classes = new List<ClassDefinition>();
 
             GlobalClass = new ClassDefinition(this)

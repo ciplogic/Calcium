@@ -12,7 +12,7 @@ namespace Cal.Core.Definitions
         public BlockDefinition IfBody { get; set; }
         public BlockDefinition ElseBody { get; set; }
 
-        public IfDefinition(AstNode item, BlockDefinition parentScope) : base(parentScope.Scope)
+        public IfDefinition(AstNode item, BlockDefinition parentScope) : base(parentScope)
         {
             IfExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, this);
             Process(item, parentScope);

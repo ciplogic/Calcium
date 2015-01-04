@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Cal.Core.Lexer;
 using Cal.Core.Runtime;
 
@@ -10,7 +8,7 @@ namespace Cal.Core.Definitions.IdentifierDefinition
 {
     public class ReferenceResolver
     {
-        public Dictionary<string, List<ReferenceValueDefinition>> DefinitionDictionary { get; set; } 
+        public Dictionary<string, List<ReferenceValueDefinition>> DefinitionDictionary { get; set; }
         public static ReferenceResolver Instance
         {
             get { return StaticInstance; }
@@ -20,7 +18,7 @@ namespace Cal.Core.Definitions.IdentifierDefinition
         {
             DefinitionDictionary = new Dictionary<string, List<ReferenceValueDefinition>>();
         }
-        static readonly ReferenceResolver StaticInstance =new ReferenceResolver();
+        static readonly ReferenceResolver StaticInstance = new ReferenceResolver();
 
         public static ReferenceValueDefinition Resolve(List<TokenDef> tokens, BlockDefinition parentScope)
         {
@@ -29,6 +27,17 @@ namespace Cal.Core.Definitions.IdentifierDefinition
 
         private ReferenceValueDefinition ResolveInstance(List<TokenDef> tokens, BlockDefinition parentScope)
         {
+            if (tokens.Count == 1)
+            {
+                switch (parentScope.Kind)
+                {
+                    case BlockKind.Instruction:
+                    case BlockKind.Method:
+                        return parentScope.LocateVariable(tokens[0]);
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
             throw new NotImplementedException();
         }
 

@@ -5,17 +5,16 @@ namespace Cal.Core.Definitions
 {
     public class InstructionDefinition
     {
-        public ScopeDefinition Scope { get; set; }
+        public BlockDefinition ParentBlock { get; set; }
 
-        public InstructionDefinition(ScopeDefinition scope)
+        public InstructionDefinition(BlockDefinition scope)
         {
-            Scope = scope;
+            ParentBlock = scope;
         }
 
         public virtual void WriteCode(StringBuilder sb)
         {
             throw new NotImplementedException();
-            sb.AppendLine("//not implemented");
         }
     }
 }

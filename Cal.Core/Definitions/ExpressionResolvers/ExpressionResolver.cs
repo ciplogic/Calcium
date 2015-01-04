@@ -168,14 +168,13 @@ namespace Cal.Core.Definitions.ExpressionResolvers
 
         private static ExprResolverBase ResolveVariableOrFunction(InstructionDefinition expressionDefinition, TokenDef contentToken)
         {
-            var parentScope = expressionDefinition.Scope;
-            var content = contentToken.GetContent();
-            var variable = parentScope.LocateVariable(content);
-            if (variable == null)
+            var parentBlock = expressionDefinition.ParentBlock;
+            var variableRef = (ReferenceVariableDefinition)parentBlock.LocateVariable(contentToken);
+            if (variableRef== null)
             {
                 throw new NotImplementedException();
             }
-            ExprResolverBase result = new VariableResolved(variable);
+            var result = new VariableResolved(variableRef.VariableDefinition);
             return result;
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Lexer;
 
-namespace Cal.Core.Definitions
+namespace Cal.Core.Definitions.Assigns
 {
     public class AssignLeftDefinition 
     {
@@ -12,8 +12,13 @@ namespace Cal.Core.Definitions
 
         public AssignLeftDefinition(List<TokenDef> tokens, BlockDefinition parentScope)
         {
-            ReferenceDefinition = ReferenceResolver.Resolve(tokens, parentScope);
             _tokens = tokens;
+            ReferenceDefinition = ReferenceResolver.Resolve(tokens, parentScope);
+            if (ReferenceDefinition.Definition == null && tokens.Count==1)
+            {
+                var firstToken = tokens[0];
+                parentScope.AddVariable(firstToken);
+            }
         }
 
         public List<TokenDef> Tokens

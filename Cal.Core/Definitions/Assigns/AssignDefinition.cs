@@ -5,12 +5,12 @@ using Cal.Core.Definitions.ExpressionResolvers;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
 
-namespace Cal.Core.Definitions
+namespace Cal.Core.Definitions.Assigns
 {
     public class AssignDefinition : InstructionDefinition
     {
         public AssignDefinition(BlockDefinition blockDefinition, AstNode item, int indexAssign)
-            : base(blockDefinition.Scope)
+            : base(blockDefinition)
         {
             var tokenDefs = item.RowTokens.Items;
             List<TokenKind> tokenKinds = tokenDefs
@@ -21,7 +21,6 @@ namespace Cal.Core.Definitions
             AssignToken = tokenDefs[indexAssign];
             Left = new AssignLeftDefinition(leftTokens, blockDefinition);
             RightExpression = ExpressionResolver.Resolve(rightTOkens, this);
-            AddLeftIfOneToken(Left);
         }
         
         public TokenDef AssignToken {get; set;}
@@ -31,14 +30,6 @@ namespace Cal.Core.Definitions
         public ExprResolverBase RightExpression { get; set; }
 
 
-        private void AddLeftIfOneToken(AssignLeftDefinition left)
-        {
-            if (left.Tokens.Count != 1)
-                return;
-            var firstToken = left.Tokens[0];
-            Scope.AddVariable(firstToken.GetContent());
-        }
-
         public override string ToString()
         {
             return string.Format("{0} {2} {1}", Left, RightExpression, AssignToken.GetContent());
@@ -47,7 +38,7 @@ namespace Cal.Core.Definitions
         public override void WriteCode(StringBuilder sb)
         {
             var leftCode = Left.ToCode();
-            sb.AppendFormat("{0} = {1};", leftCode, RightExpression.ToCode())
+            sb.AppendFormat("{0} {2} {1};", leftCode, RightExpression.ToCode(), AssignToken.GetContent())
                 .AppendLine();
         }
     }
