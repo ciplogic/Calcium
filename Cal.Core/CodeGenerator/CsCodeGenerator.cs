@@ -13,7 +13,7 @@ namespace Cal.Core.CodeGenerator
         readonly string[] _defaultNamespaces =
         {
             "System", 
-            "System.Collection.Generic"
+            "System.Collections.Generic"
         };
 
         public bool MultiFile { get; set; }

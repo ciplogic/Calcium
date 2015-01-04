@@ -21,5 +21,10 @@ namespace Cal.Core.Definitions.IdentifierDefinition
         {
             _method = method;
         }
+
+        public MethodInfo Info
+        {
+            get { return _method; }
+        }
     }
 }

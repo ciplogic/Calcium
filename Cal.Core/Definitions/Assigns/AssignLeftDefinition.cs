@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Lexer;
+using Cal.Core.SimpleParser;
 
 namespace Cal.Core.Definitions.Assigns
 {
@@ -10,15 +11,16 @@ namespace Cal.Core.Definitions.Assigns
         private readonly List<TokenDef> _tokens;
         public ReferenceValueDefinition ReferenceDefinition { get; set; }
 
-        public AssignLeftDefinition(List<TokenDef> tokens, BlockDefinition parentScope)
+        public AssignLeftDefinition(List<TokenDef> tokens, BlockDefinition instructionScope)
         {
             _tokens = tokens;
-            ReferenceDefinition = ReferenceResolver.Resolve(tokens, parentScope);
+            ReferenceDefinition = ReferenceResolver.Resolve(tokens, instructionScope);
             if (ReferenceDefinition.Definition == null && tokens.Count==1)
             {
                 var firstToken = tokens[0];
-                parentScope.AddVariable(firstToken);
+                instructionScope.AddVariable(firstToken);
             }
+            ReferenceDefinition = ReferenceResolver.Resolve(tokens, instructionScope);
         }
 
         public List<TokenDef> Tokens
@@ -33,6 +35,11 @@ namespace Cal.Core.Definitions.Assigns
                 return Tokens[0].GetContent();
             }
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return _tokens.TokenJoinContent();
         }
     }
 }

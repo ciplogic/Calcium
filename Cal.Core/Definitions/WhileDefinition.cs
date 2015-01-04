@@ -13,7 +13,7 @@ namespace Cal.Core.Definitions
             : base(scope)
         {
             WhileBody = new BlockDefinition(scope, "While body",BlockKind.Instruction);
-            WhileExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, this);
+            WhileExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, scope);
         }
 
         public override void WriteCode(StringBuilder sb)

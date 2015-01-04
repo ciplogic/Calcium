@@ -1,6 +1,6 @@
 using Cal.Core.Definitions.IdentifierDefinition;
 
-namespace Cal.Core.Definitions
+namespace Cal.Core.Definitions.ReferenceDefinitions
 {
     public class ReferenceVariableDefinition : ReferenceValueDefinition
     {
@@ -10,6 +10,7 @@ namespace Cal.Core.Definitions
             base(ReferenceValueKind.Variable)
         {
             _variableDefinition = variableDefinition;
+            Definition = variableDefinition;
         }
 
         public VariableDefinition VariableDefinition

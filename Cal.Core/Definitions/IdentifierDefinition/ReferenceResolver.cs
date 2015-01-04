@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Cal.Core.Definitions.ExpressionResolvers;
+using Cal.Core.Definitions.ExpressionResolvers.Nodes;
 using Cal.Core.Lexer;
 using Cal.Core.Runtime;
 
@@ -65,6 +67,20 @@ namespace Cal.Core.Definitions.IdentifierDefinition
         {
             var referencesList = DefinitionDictionary.SetItem(methodInfo.Name);
             referencesList.Add(new MethodReferenceDefinition(methodInfo));
+        }
+
+        public ExprResolverBase ResolveMethod(string methodName, int paramCount)
+        {
+            List<ReferenceValueDefinition> result;
+            if (!DefinitionDictionary.TryGetValue(methodName, out result))
+                return null;
+            foreach (var valueDefinition in result)
+            {
+                var methodDefinition = (MethodReferenceDefinition) valueDefinition;
+                if(methodDefinition.Info.GetParameters().Length==paramCount)
+                    return new FunctionCallResolved(methodDefinition);
+            }
+            throw new InvalidOperationException("Method not found");
         }
     }
 }

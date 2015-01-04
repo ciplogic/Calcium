@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using Cal.Core.Definitions.ExpressionResolvers;
+using Cal.Core.Definitions.ReferenceDefinitions;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
 
@@ -20,9 +21,21 @@ namespace Cal.Core.Definitions.Assigns
             var rightTOkens = tokenDefs.GetRange(indexAssign + 1, tokenKinds.Count - indexAssign - 1);
             AssignToken = tokenDefs[indexAssign];
             Left = new AssignLeftDefinition(leftTokens, blockDefinition);
-            RightExpression = ExpressionResolver.Resolve(rightTOkens, this);
+            RightExpression = ExpressionResolver.Resolve(rightTOkens, blockDefinition);
+            AssignTypeForVariable();
         }
-        
+
+        private void AssignTypeForVariable()
+        {
+            if (!RightExpression.CalculateExpressionType())
+                return;
+            var refVarDefinition = Left.ReferenceDefinition as ReferenceVariableDefinition;
+            if (refVarDefinition != null && refVarDefinition.VariableDefinition.Type==null)
+            {
+                refVarDefinition.VariableDefinition.Type = RightExpression.ExpressionType;
+            }
+        }
+
         public TokenDef AssignToken {get; set;}
 
         public AssignLeftDefinition Left { get; set; }

@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cal.Core.Definitions.ExpressionResolvers.Nodes;
+using Cal.Core.Definitions.IdentifierDefinition;
+using Cal.Core.Definitions.ReferenceDefinitions;
 using Cal.Core.Lexer;
 
 namespace Cal.Core.Definitions.ExpressionResolvers
 {
-    public class ExprResolverUnsolved : ExprResolverBase
-    {
-        public ExprResolverUnsolved() : base(ExpressionKind.Unknown)
-        {
-        }
-
-        public override string ToCode()
-        {
-            throw new NotImplementedException();
-        }
-    }
     class ExpressionResolver
     {
         private static TokenKind[] _binaryOperators;
@@ -36,7 +27,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers
                 TokenKind.OpSub
             };
         }
-        public static ExprResolverBase Resolve(List<TokenDef> tokens, InstructionDefinition instructionDefinition)
+        public static ExprResolverBase Resolve(List<TokenDef> tokens, BlockDefinition instructionDefinition)
         {
             var count = tokens.Count;
             if (count == 1)
@@ -49,7 +40,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             }
             return HandleMultipleItemsExpression(instructionDefinition, tokens);
         }
-        private static ExprResolverBase HandleMultipleItemsExpression(InstructionDefinition instructionDefinition, List<TokenDef> tokens)
+        private static ExprResolverBase HandleMultipleItemsExpression(BlockDefinition instructionDefinition, List<TokenDef> tokens)
         {
             var contentTokens = tokens;
             if (IsFunction(contentTokens))
@@ -68,7 +59,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             return binaryExpression;
         }
 
-        private static ExprResolverBase ParenResolve(List<TokenDef> contentTokens, InstructionDefinition instructionDefinition)
+        private static ExprResolverBase ParenResolve(List<TokenDef> contentTokens, BlockDefinition instructionDefinition)
         {
             var resolvedParen = new ParenResolved(contentTokens.GetRange(1, contentTokens.Count-2), instructionDefinition);
             return resolvedParen;
@@ -85,7 +76,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             return true;
         }
 
-        private static ExprResolverBase FunctionResolve(List<TokenDef> contentTokens, InstructionDefinition instructionDefinition)
+        private static ExprResolverBase FunctionResolve(List<TokenDef> contentTokens, BlockDefinition instructionDefinition)
         {
             ExprResolverBase result = new FunctionCallResolved(contentTokens, instructionDefinition);
             return result;
@@ -140,14 +131,14 @@ namespace Cal.Core.Definitions.ExpressionResolvers
         }
 
 
-        private static ExprResolverBase ResolveUnary(InstructionDefinition expressionDefinition, List<TokenDef> tokens)
+        private static ExprResolverBase ResolveUnary(BlockDefinition expressionDefinition, List<TokenDef> tokens)
         {
             ExprResolverBase result = new ExprUnaryResolved(tokens[0], tokens.GetRange(1, tokens.Count - 1), expressionDefinition);
 
             return result;
         }
 
-        private static ExprResolverBase ResolveIndividual(InstructionDefinition instructionDefinition, TokenDef contentToken)
+        private static ExprResolverBase ResolveIndividual(BlockDefinition instructionDefinition, TokenDef contentToken)
         {
             switch (contentToken.Kind)
             {
@@ -166,16 +157,42 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             throw new NotImplementedException();
         }
 
-        private static ExprResolverBase ResolveVariableOrFunction(InstructionDefinition expressionDefinition, TokenDef contentToken)
+        private static ExprResolverBase ResolveVariableOrFunction(BlockDefinition expressionDefinition, TokenDef contentToken)
         {
-            var parentBlock = expressionDefinition.ParentBlock;
+            var parentBlock = expressionDefinition;
             var variableRef = (ReferenceVariableDefinition)parentBlock.LocateVariable(contentToken);
-            if (variableRef== null)
+            if (variableRef== null||variableRef.VariableDefinition==null)
             {
-                throw new NotImplementedException();
+                return null;
             }
             var result = new VariableResolved(variableRef.VariableDefinition);
             return result;
+        }
+
+        public static ExprResolverBase ResolveMethod(List<TokenDef> tokens, BlockDefinition instructionDefinition)
+        {  
+            var firstToken = tokens[0].Kind;
+              
+            if (tokens.Count == 1)
+            {
+                switch (firstToken)
+                {
+                    case TokenKind.RwBreak:
+                        return new BreakExpression();
+                    case TokenKind.Identifier:
+                        var result = Resolve(tokens, instructionDefinition);
+                        if (result != null)
+                            return result;
+                        break;
+                }
+            }
+
+            return ResolveMethodInRuntime(tokens);
+        }
+
+        private static ExprResolverBase ResolveMethodInRuntime(List<TokenDef> tokens)
+        {
+            return ReferenceResolver.Instance.ResolveMethod(tokens[0].GetContent(), tokens.Count-1);
         }
     }
 }

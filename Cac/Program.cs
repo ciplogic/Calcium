@@ -9,7 +9,6 @@ using Cal.Core.CodeGenerator;
 using Cal.Core.Definitions;
 using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Lexer;
-using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
 
 #endregion
@@ -68,8 +67,6 @@ namespace Cal
             var parseResult = parser.Parse();
             var defBuilder = new DefinitionsBuilder();
             var progDefinition = defBuilder.Build(parseResult);
-            var semAnalyisis = new SemanticAnalysis();
-            semAnalyisis.Analyze(progDefinition);
             var codeBuilder = new CsCodeGenerator(progDefinition);
             var generatedFiles = codeBuilder.GenerateFilePack(codeBuilder.MultiFile);
             File.WriteAllText(CsCodeGenerator.MainCs, generatedFiles[CsCodeGenerator.MainCs]);

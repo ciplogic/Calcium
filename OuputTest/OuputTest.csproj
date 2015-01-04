@@ -56,5 +56,11 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cal.Runtime\Cal.Runtime.csproj">
+      <Project>{3e19b50d-d835-43e2-a6d9-051238fbe885}</Project>
+      <Name>Cal.Runtime</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

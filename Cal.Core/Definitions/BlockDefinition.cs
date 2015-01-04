@@ -1,4 +1,5 @@
 ﻿using Cal.Core.Definitions.IdentifierDefinition;
+using Cal.Core.Definitions.ReferenceDefinitions;
 using Cal.Core.Lexer;
 
 namespace Cal.Core.Definitions

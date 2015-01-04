@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Cal.Core.Definitions.Assigns;
+using Cal.Core.Definitions.ExpressionResolvers;
 using Cal.Core.Lexer;
-using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
 using Cal.Core.Utils;
 
@@ -111,14 +111,21 @@ namespace Cal.Core.Definitions
             var tokenKinds = item.RowTokens.Items;
             bool hasAssign = tokenKinds.Any(IsAssignOperator);
             if (!hasAssign)
-                blockDefinition.Scope.ProcessAddCall(item, blockDefinition);
+            {
+                ExprResolverBase instructionResolver = ExpressionResolver.ResolveMethod(tokenKinds, blockDefinition);
+                if(instructionResolver.Kind==ExpressionKind.FunctionCall)
+                blockDefinition.Scope.ProcessAddCall(item, blockDefinition, instructionResolver);
+                else
+                {
+                    blockDefinition.Scope.AddResolvedOperation(instructionResolver, blockDefinition);
+                }
+            }
             else
             {
                 var indexAssignOp = tokenKinds
                     .IndexOfT(IsAssignOperator);
                 var assign = new AssignDefinition(blockDefinition, item, indexAssignOp);
                 blockDefinition.Scope.Operations.Add(assign);
-                SemanticAnalysis.AnalyseFirstAssign(assign, blockDefinition.Scope);
             }
         }
     }

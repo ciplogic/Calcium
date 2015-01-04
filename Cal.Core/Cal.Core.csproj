@@ -54,6 +54,8 @@
     <Compile Include="Definitions\ClassDefinition.cs" />
     <Compile Include="Definitions\ClrClassDefinition.cs" />
     <Compile Include="Definitions\ExpressionDefinition.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\Nodes\BreakExpression.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\ExprResolverUnsolved.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\BinaryExpression.cs" />
     <Compile Include="Definitions\ExpressionResolvers\ExpressionKind.cs" />
     <Compile Include="Definitions\ExpressionResolvers\ExpressionResolver.cs" />
@@ -61,7 +63,8 @@
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ParenResolved.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ExprUnaryResolved.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\FunctionCallResolved.cs" />
-    <Compile Include="Definitions\ExpressionResolvers\TokenUtils.cs" />
+    <Compile Include="Definitions\ResolvedOperation.cs" />
+    <Compile Include="Definitions\TokenUtils.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpression.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpressionT.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\VariableResolved.cs" />
@@ -71,8 +74,9 @@
     <Compile Include="Definitions\MethodDefinition.cs" />
     <Compile Include="Definitions\ProgramDefinition.cs" />
     <Compile Include="Definitions\IdentifierDefinition\ReferenceValueDefinition.cs" />
+    <Compile Include="Definitions\ReferenceDefinitions\ReferenceFunctionDefinition.cs" />
     <Compile Include="Definitions\ReferenceValueKind.cs" />
-    <Compile Include="Definitions\ReferenceVariableDefinition.cs" />
+    <Compile Include="Definitions\ReferenceDefinitions\ReferenceVariableDefinition.cs" />
     <Compile Include="Definitions\ScopeDefinition.cs" />
     <Compile Include="Definitions\TypeDefiniton.cs" />
     <Compile Include="Definitions\VariableDefinition.cs" />
@@ -80,7 +84,6 @@
     <Compile Include="Definitions\DefinitionsBuilder.cs" />
     <Compile Include="Runtime\GlobalFunctions.cs" />
     <Compile Include="Runtime\ReflectionUtils.cs" />
-    <Compile Include="Semantic\SemanticAnalysis.cs" />
     <Compile Include="SimpleParser\AstVisitor.cs" />
     <Compile Include="SimpleParser\BlockFoldings.cs" />
     <Compile Include="SimpleParser\LineTokens.cs" />
@@ -114,7 +117,9 @@
     <Compile Include="SimpleParser\BlockParser.cs" />
     <Compile Include="SimpleParser\AstNode.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Semantic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

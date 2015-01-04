@@ -14,7 +14,7 @@ namespace Cal.Core.Definitions
 
         public IfDefinition(AstNode item, BlockDefinition parentScope) : base(parentScope)
         {
-            IfExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, this);
+            IfExpression = ExpressionResolver.Resolve(item.ChildrenNodes[1].RowTokens.Items, parentScope);
             Process(item, parentScope);
         }
 

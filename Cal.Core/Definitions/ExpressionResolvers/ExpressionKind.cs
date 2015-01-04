@@ -9,5 +9,6 @@
         Parentheses,
         UnaryOperator,
         BunaryOperator,
+        SpecialOperation
     }
 }

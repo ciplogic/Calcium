@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using Cal.Core.CodeGenerator;
+using Cal.Core.Definitions.ExpressionResolvers;
 using Cal.Core.SimpleParser;
 
 namespace Cal.Core.Definitions
@@ -19,9 +20,9 @@ namespace Cal.Core.Definitions
             Name = name;
         }
 
-        public void ProcessAddCall(AstNode item, BlockDefinition scope)
+        public void ProcessAddCall(AstNode item, BlockDefinition scope, ExprResolverBase instructionResolver)
         {
-            Operations.Add(new CallDefinition(item.RowTokens.Items, scope));
+            Operations.Add(new CallDefinition(item.RowTokens.Items, scope, instructionResolver));
         }
 
         public void ProcessAddOperation(InstructionDefinition operation)
@@ -61,5 +62,9 @@ namespace Cal.Core.Definitions
             sb.AppendLine("}");
         }
 
+        public void AddResolvedOperation(ExprResolverBase instructionResolver, BlockDefinition scope)
+        {
+            Operations.Add(new ResolvedOperation(instructionResolver,scope));
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
         public ExprResolverBase RightDefinition { get; private set; }
 
         public BinaryExpression(TokenDef tokenDef, List<TokenDef> leftTokens,List<TokenDef> rightTokens,
-            InstructionDefinition parentExpression) 
+            BlockDefinition parentExpression) 
             : base(ExpressionKind.BunaryOperator)
         {
             TokenDef = tokenDef;
@@ -21,6 +21,16 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
         public override string ToCode()
         {
             return string.Format("{0}{1}{2}", LeftDefinition.ToCode(), TokenDef.GetContent(), RightDefinition.ToCode());
+        }
+
+        public override bool CalculateExpressionType()
+        {
+            if (!LeftDefinition.CalculateExpressionType() || !RightDefinition.CalculateExpressionType())
+            {
+                return false;
+            }
+            ExpressionType = LeftDefinition.ExpressionType;
+            return true;
         }
     }
 }

@@ -19,5 +19,13 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
         {
             return _variable==null? "UNKNOWN": _variable.Name;
         }
+
+        public override bool CalculateExpressionType()
+        {
+            if (_variable.Type == null)
+                return false;
+            ExpressionType = _variable.Type;
+            return true;
+        }
     }
 }

@@ -7,6 +7,7 @@
         Array,
         ArrayItem,
         FieldItem,
-        Method
+        Method,
+        Function
     }
 }

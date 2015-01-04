@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cal.Core.Definitions.IdentifierDefinition;
+using Cal.Core.Definitions.ReferenceDefinitions;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
 
@@ -47,7 +48,8 @@ namespace Cal.Core.Definitions
 
         public override string ToString()
         {
-            return String.Format("def {0}({1})", Name, String.Join(",", Scope.Variables));
+            return String.Format("def {0}({1})", Name, String.Join(",",
+                Arguments.Select(arg => arg.ComputedText())));
         }
 
         public void ProcessArguments(List<TokenDef> argumentTokens)

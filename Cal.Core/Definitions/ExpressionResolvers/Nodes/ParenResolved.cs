@@ -7,7 +7,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
     {
         public ExprResolverBase InnerExpression { get; set; }
 
-        public ParenResolved(List<TokenDef> contentTokens, InstructionDefinition instructionDefinition)
+        public ParenResolved(List<TokenDef> contentTokens, BlockDefinition instructionDefinition)
             : base(ExpressionKind.Parentheses)
         {
             InnerExpression = ExpressionResolver.Resolve(contentTokens, instructionDefinition);
@@ -16,6 +16,14 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
         public override string ToCode()
         {
             return string.Format("({0})", InnerExpression.ToCode());
+        }
+
+        public override bool CalculateExpressionType()
+        {
+            if (!InnerExpression.CalculateExpressionType())
+                return false;
+            ExpressionType = InnerExpression.ExpressionType;
+            return true;
         }
     }
 }
