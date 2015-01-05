@@ -9,6 +9,7 @@ using Cal.Core.CodeGenerator;
 using Cal.Core.Definitions;
 using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Lexer;
+using Cal.Core.Semantic;
 using Cal.Core.SimpleParser;
 
 #endregion
@@ -59,14 +60,16 @@ namespace Cal
 
             ReferenceResolver.Instance.ScanGlobalMethods(assemblyRuntime);
 
-            string pathExamples = @"c:\Oss\mirah-0.0.12\examples\";
-            var fileName = pathExamples + "fractal.mirah";
+            string pathExamples = @"..\..\..\";
+            var fileName = pathExamples + "fractal.cal";
             var lexer = new QuickLexer();
             var tokens = lexer.Scan(fileName);
             var parser = new BlockParser(tokens);
             var parseResult = parser.Parse();
             var defBuilder = new DefinitionsBuilder();
             var progDefinition = defBuilder.Build(parseResult);
+            var semanticVisitor = new SemanticVisitor();
+            semanticVisitor.Build(progDefinition);
             var codeBuilder = new CsCodeGenerator(progDefinition);
             var generatedFiles = codeBuilder.GenerateFilePack(codeBuilder.MultiFile);
             File.WriteAllText(CsCodeGenerator.MainCs, generatedFiles[CsCodeGenerator.MainCs]);

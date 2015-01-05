@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cal.Core.Definitions.ExpressionResolvers.Nodes;
 using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Definitions.ReferenceDefinitions;
@@ -9,11 +10,10 @@ namespace Cal.Core.Definitions.ExpressionResolvers
 {
     class ExpressionResolver
     {
-        private static TokenKind[] _binaryOperators;
+        private static readonly TokenKind[] _binaryOperators;
 
         static ExpressionResolver()
         {
-
             _binaryOperators = new[]
             {
                 TokenKind.OpEquals,
@@ -52,6 +52,10 @@ namespace Cal.Core.Definitions.ExpressionResolvers
                 return ParenResolve(contentTokens, instructionDefinition);
             }
             var binaryTokens = GetBinaryTokens(contentTokens);
+            if (binaryTokens.Count == 0)
+            {
+                return new MultiTokenExpression(contentTokens);
+            }
             var highestPriorityBinaryToken = ComputeHighestPriorityToken(binaryTokens);
             var leftTokens = tokens.GetRange(0, highestPriorityBinaryToken.Key);
             var rightTokens = tokens.GetRange(highestPriorityBinaryToken.Key + 1, tokens.Count - highestPriorityBinaryToken.Key - 1);
@@ -157,13 +161,26 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             throw new NotImplementedException();
         }
 
+        private static ExprResolverBase LocateMethod(string methodName, BlockDefinition context)
+        {
+            var isClass = context.Kind == BlockKind.Class;
+            while (!isClass)
+            {
+                context = context.Parent;
+                isClass = context.Kind == BlockKind.Class;
+            }
+            var classDef = (ClassDefinition) context;
+            var result = classDef.Defs.FirstOrDefault(def => def.Name == methodName);
+
+            return result == null? null: new FunctionCallResolved(result);
+        }
         private static ExprResolverBase ResolveVariableOrFunction(BlockDefinition expressionDefinition, TokenDef contentToken)
         {
             var parentBlock = expressionDefinition;
             var variableRef = (ReferenceVariableDefinition)parentBlock.LocateVariable(contentToken);
             if (variableRef== null||variableRef.VariableDefinition==null)
             {
-                return null;
+                return LocateMethod(contentToken.GetContent(), expressionDefinition);
             }
             var result = new VariableResolved(variableRef.VariableDefinition);
             return result;

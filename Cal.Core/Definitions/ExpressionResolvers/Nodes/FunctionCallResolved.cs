@@ -10,25 +10,26 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
     public class FunctionCallResolved : ExprResolverBase
     {
         public MethodReferenceDefinition MethodDefinition { get; set; }
-        public string FunctionName { get; set; }
+        public string FunctionName {
+            get
+            {
+                if (string.IsNullOrEmpty(ClassName))
+                    return MethodName;
+                return string.Format("{0}.{1}", ClassName, MethodName);
+            }
+        }
         public List<ExprResolverBase> ArgumentCalls { get; private set; }
 
         public ReferenceFunctionDefinition FunctionDefinition { get; set; }
 
-        public string MethodName
-        {
-            get
-            {
-                var info = MethodDefinition.Info;
-                return string.Format("{0}.{1}", info.DeclaringType.Name, info.Name);
-            }
-        }
+        public string MethodName { get; set; }
+        public string ClassName { get; set; }
 
         public FunctionCallResolved(List<TokenDef> contentTokens, BlockDefinition parentDefinition)
             : base(ExpressionKind.FunctionCall)
         {
             ArgumentCalls = new List<ExprResolverBase>();
-            FunctionName = contentTokens[0].GetContent();
+            MethodName = contentTokens[0].GetContent();
             var argumentTokens = contentTokens.GetRange(2, contentTokens.Count - 3);
             var argumentTokensSplit = argumentTokens.SplitBlockByToken(TokenKind.OpComma);
             foreach (var tokenSplit in argumentTokensSplit)
@@ -41,6 +42,19 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
         public FunctionCallResolved(MethodReferenceDefinition methodDefinition) : base(ExpressionKind.FunctionCall)
         {
             MethodDefinition = methodDefinition;
+            MethodName = MethodDefinition.Info.Name;
+            ClassName = MethodDefinition.Info.DeclaringType.Name;
+        }
+
+
+        public FunctionCallResolved(MethodDefinition methodDefinition) : base(ExpressionKind.FunctionCall)
+        {
+            FunctionDefinition = new ReferenceFunctionDefinition
+            {
+                Definition = methodDefinition
+            };
+            MethodName = methodDefinition.Name;
+            ClassName = ((ClassDefinition) methodDefinition.Parent).Name;
         }
 
         public override string ToCode()

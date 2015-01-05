@@ -8,7 +8,8 @@
         FunctionCall,
         Parentheses,
         UnaryOperator,
-        BunaryOperator,
-        SpecialOperation
+        BinaryOperator,
+        SpecialOperation,
+        MultiToken
     }
 }
