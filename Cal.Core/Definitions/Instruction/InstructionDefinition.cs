@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Cal.Core.Definitions
+namespace Cal.Core.Definitions.Instruction
 {
     public class InstructionDefinition
     {

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Cal.Core.Definitions.ExpressionResolvers;
 using Cal.Core.Definitions.ExpressionResolvers.Nodes;
+using Cal.Core.Definitions.Instruction;
 using Cal.Core.Lexer;
 
 namespace Cal.Core.Definitions

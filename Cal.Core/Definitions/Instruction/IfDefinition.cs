@@ -4,7 +4,7 @@ using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
 using Cal.Core.Utils;
 
-namespace Cal.Core.Definitions
+namespace Cal.Core.Definitions.Instruction
 {
     public class IfDefinition : InstructionDefinition
     {

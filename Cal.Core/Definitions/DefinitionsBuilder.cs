@@ -2,6 +2,8 @@
 using System.Linq;
 using Cal.Core.Definitions.Assigns;
 using Cal.Core.Definitions.ExpressionResolvers;
+using Cal.Core.Definitions.ExpressionResolvers.Nodes;
+using Cal.Core.Definitions.Instruction;
 using Cal.Core.Lexer;
 using Cal.Core.SimpleParser;
 using Cal.Core.Utils;
@@ -34,7 +36,7 @@ namespace Cal.Core.Definitions
                 switch (foldNodeKind)
                 {
                     case TokenKind.RwDef:
-                        ProcesProgramMethod(item, program);
+                        ProcesProgramMethod(item);
                         break;
                     default:
                         var mainMethod = program.GlobalClass.Defs.First(def => def.Name == "Main");
@@ -44,7 +46,7 @@ namespace Cal.Core.Definitions
             }
         }
 
-        private void ProcesProgramMethod(AstNode item, ProgramDefinition program)
+        private void ProcesProgramMethod(AstNode item)
         {
             var globalClass = ProgramDefinition.Instance.GlobalClass;
             var methodDefinition = new MethodDefinition(globalClass);
@@ -53,6 +55,28 @@ namespace Cal.Core.Definitions
             methodDefinition.IsStatic = true;
             globalClass.AddMethodToClass(methodDefinition);
             ProcessBodyInstructions(methodDefinition, item.ChildrenNodes[2].ChildrenNodes.ToArray());
+            HandleLastOperationAsReturn(methodDefinition);
+        }
+
+        private void HandleLastOperationAsReturn(MethodDefinition methodDefinition)
+        {
+            var instructionDefinitions = methodDefinition.Scope.Operations;
+            var lastOperation = instructionDefinitions.Last();
+            var resolvedOperation = lastOperation as ResolvedOperation;
+            if (resolvedOperation == null)
+                return;
+            var resolvedExpression = resolvedOperation.Expression;
+            if(resolvedExpression.Kind !=ExpressionKind.Variable)
+                return;
+            var varResolved = (VariableResolved)resolvedExpression;
+            if(!varResolved.CalculateExpressionType())
+                return;
+            var resultType = varResolved.ExpressionType;
+            if(resultType==null)
+                return;
+            instructionDefinitions[instructionDefinitions.Count - 1] = 
+                new ReturnVariable(varResolved.Variable, methodDefinition);
+            methodDefinition.ReturnType = resultType;
         }
 
 

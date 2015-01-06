@@ -50,7 +50,7 @@
     <Compile Include="Definitions\BaseDefinition.cs" />
     <Compile Include="Definitions\BlockDefinition.cs" />
     <Compile Include="Definitions\BlockKind.cs" />
-    <Compile Include="Definitions\CallDefinition.cs" />
+    <Compile Include="Definitions\Instruction\CallDefinition.cs" />
     <Compile Include="Definitions\ClassDefinition.cs" />
     <Compile Include="Definitions\ClrClassDefinition.cs" />
     <Compile Include="Definitions\ExpressionDefinition.cs" />
@@ -64,14 +64,15 @@
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ParenResolved.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ExprUnaryResolved.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\FunctionCallResolved.cs" />
-    <Compile Include="Definitions\ResolvedOperation.cs" />
+    <Compile Include="Definitions\Instruction\ResolvedOperation.cs" />
+    <Compile Include="Definitions\ReturnVariable.cs" />
     <Compile Include="Definitions\TokenUtils.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpression.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpressionT.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\VariableResolved.cs" />
     <Compile Include="Semantic\IdentifierDefinition\ReferenceResolver.cs" />
-    <Compile Include="Definitions\IfDefinition.cs" />
-    <Compile Include="Definitions\InstructionDefinition.cs" />
+    <Compile Include="Definitions\Instruction\IfDefinition.cs" />
+    <Compile Include="Definitions\Instruction\InstructionDefinition.cs" />
     <Compile Include="Definitions\MethodDefinition.cs" />
     <Compile Include="Definitions\ProgramDefinition.cs" />
     <Compile Include="Semantic\IdentifierDefinition\ReferenceValueDefinition.cs" />
@@ -81,7 +82,7 @@
     <Compile Include="Definitions\ScopeDefinition.cs" />
     <Compile Include="Definitions\TypeDefiniton.cs" />
     <Compile Include="Definitions\VariableDefinition.cs" />
-    <Compile Include="Definitions\WhileDefinition.cs" />
+    <Compile Include="Definitions\Instruction\WhileDefinition.cs" />
     <Compile Include="Definitions\DefinitionsBuilder.cs" />
     <Compile Include="Runtime\GlobalFunctions.cs" />
     <Compile Include="Runtime\ReflectionUtils.cs" />

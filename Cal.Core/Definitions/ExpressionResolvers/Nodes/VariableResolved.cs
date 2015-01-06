@@ -15,16 +15,21 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
             
         }
 
+        public VariableDefinition Variable
+        {
+            get { return _variable; }
+        }
+
         public override string ToCode()
         {
-            return _variable==null? "UNKNOWN": _variable.Name;
+            return Variable==null? "UNKNOWN": Variable.Name;
         }
 
         public override bool CalculateExpressionType()
         {
-            if (_variable.Type == null)
+            if (Variable.Type == null)
                 return false;
-            ExpressionType = _variable.Type;
+            ExpressionType = Variable.Type;
             return true;
         }
     }

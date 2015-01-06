@@ -2,7 +2,7 @@
 using Cal.Core.Definitions.ExpressionResolvers;
 using Cal.Core.SimpleParser;
 
-namespace Cal.Core.Definitions
+namespace Cal.Core.Definitions.Instruction
 {
     public class WhileDefinition : InstructionDefinition
     {
