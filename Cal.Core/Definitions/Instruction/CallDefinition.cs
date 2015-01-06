@@ -47,7 +47,7 @@ namespace Cal.Core.Definitions
 
         public override void WriteCode(StringBuilder sb)
         {
-            sb.Append(_instructionResolver.MethodName);
+            sb.Append(_instructionResolver.FunctionName);
             sb.AppendFormat("({0});",
                 string.Join(", ", Arguments.Select(arg => arg.ToCode())));
             sb.AppendLine();
