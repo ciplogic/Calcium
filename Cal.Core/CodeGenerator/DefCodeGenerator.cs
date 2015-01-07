@@ -47,6 +47,8 @@ namespace Cal.Core.CodeGenerator
             if (methodDefinition.ReturnType != null)
             {
                 returnTypeName = methodDefinition.ReturnType.Name;
+                if (returnTypeName == "Void")
+                    returnTypeName = "void";
             }
             if (methodDefinition.IsStatic)
             {

@@ -10,7 +10,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers
 {
     class ExpressionResolver
     {
-        private static readonly TokenKind[] _binaryOperators;
+        private static readonly HashSet<TokenKind> _binaryOperators;
 
         static ExpressionResolver()
         {
@@ -25,7 +25,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers
                 TokenKind.OpDiv,
                 TokenKind.OpAdd,
                 TokenKind.OpSub
-            };
+            }.ToHashSet();
         }
         public static ExprResolverBase Resolve(List<TokenDef> tokens, BlockDefinition instructionDefinition)
         {

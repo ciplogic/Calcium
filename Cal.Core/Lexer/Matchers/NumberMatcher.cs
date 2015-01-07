@@ -8,7 +8,16 @@ namespace Cal.Core.Lexer.Matchers
         {
             if (!DoesMatch(allText))
                 return MatchResult.None;
+            bool isFloat;
+            var len = CalculateLengthNumber(allText, out isFloat);
+            var result = new MatchResult(isFloat?TokenKind.Double:TokenKind.Integer, len);
+            return result;
+        }
+
+        private static int CalculateLengthNumber(string allText, out bool isFloat)
+        {
             var len = 0;
+            isFloat = false;
             for (var i = 0; i < allText.Length; i++)
             {
                 var ch = allText[i];
@@ -18,13 +27,12 @@ namespace Cal.Core.Lexer.Matchers
                     len = i;
                     break;
                 }
+                if (ch == '.')
+                    isFloat = true;
             }
             if (len == 0)
                 len = allText.Length;
-            var extractedText = ExtractMatchText(allText, len);
-            var isFloat = extractedText.Contains(".");
-            var result = new MatchResult(isFloat?TokenKind.Double:TokenKind.Integer, len);
-            return result;
+            return len;
         }
 
         public static bool DoesMatch(string allText)

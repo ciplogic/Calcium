@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -55,6 +56,7 @@ namespace Cal
 
         private static void EvaluateFractalMirah()
         {
+            var timer = new MyTimer();
             var assemblyRuntimePath = Path.Combine(Directory.GetCurrentDirectory(), "Cal.Runtime.dll");
             var assemblyRuntime = Assembly.LoadFile(assemblyRuntimePath);
 
@@ -73,6 +75,25 @@ namespace Cal
             var codeBuilder = new CsCodeGenerator(progDefinition);
             var generatedFiles = codeBuilder.GenerateFilePack(codeBuilder.MultiFile);
             File.WriteAllText(CsCodeGenerator.MainCs, generatedFiles[CsCodeGenerator.MainCs]);
+            Console.WriteLine("Time to process: {0} ms", timer.CountTimeFromStart());
+            Console.ReadKey();
+        }
+    }
+
+    internal class MyTimer
+    {
+        private Stopwatch _stopWatch;
+
+        public MyTimer()
+        {
+            _stopWatch = new Stopwatch();
+            _stopWatch.Start();
+        }
+
+        public long CountTimeFromStart()
+        {
+            _stopWatch.Stop();
+            return _stopWatch.ElapsedMilliseconds;
         }
     }
 }
