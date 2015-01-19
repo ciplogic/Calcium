@@ -30,6 +30,8 @@ namespace Cal.Core.Definitions.ExpressionResolvers.Nodes
         {
             ArgumentCalls = new List<ExprResolverBase>();
             MethodName = contentTokens[0].GetContent();
+            if(contentTokens.Count==1)
+                return;
             var argumentTokens = contentTokens.GetRange(2, contentTokens.Count - 3);
             var argumentTokensSplit = argumentTokens.SplitBlockByToken(TokenKind.OpComma);
             foreach (var tokenSplit in argumentTokensSplit)

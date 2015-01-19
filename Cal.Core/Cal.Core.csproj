@@ -50,6 +50,8 @@
     <Compile Include="Definitions\BaseDefinition.cs" />
     <Compile Include="Definitions\BlockDefinition.cs" />
     <Compile Include="Definitions\BlockKind.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\Nodes\Functions\FunctionInClassResolved.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\Nodes\RubyRuntimeFunctionResolved.cs" />
     <Compile Include="Definitions\Instruction\CallDefinition.cs" />
     <Compile Include="Definitions\ClassDefinition.cs" />
     <Compile Include="Definitions\ClrClassDefinition.cs" />
@@ -63,13 +65,17 @@
     <Compile Include="Definitions\ExpressionResolvers\ExprResolverBase.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ParenResolved.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ExprUnaryResolved.cs" />
-    <Compile Include="Definitions\ExpressionResolvers\Nodes\FunctionCallResolved.cs" />
+    <Compile Include="Definitions\ExpressionResolvers\Nodes\Functions\FunctionCallResolved.cs" />
     <Compile Include="Definitions\Instruction\ResolvedOperation.cs" />
     <Compile Include="Definitions\ReturnVariable.cs" />
     <Compile Include="Definitions\TokenUtils.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpression.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\ValueExpressionT.cs" />
     <Compile Include="Definitions\ExpressionResolvers\Nodes\VariableResolved.cs" />
+    <Compile Include="RuntimeResolvers\CalRuntimeResolver.cs" />
+    <Compile Include="RuntimeResolvers\CurrentClassResolver.cs" />
+    <Compile Include="RuntimeResolvers\RuntimeResolverBase.cs" />
+    <Compile Include="RuntimeResolvers\Resolvers.cs" />
     <Compile Include="Semantic\IdentifierDefinition\ReferenceResolver.cs" />
     <Compile Include="Definitions\Instruction\IfDefinition.cs" />
     <Compile Include="Definitions\Instruction\InstructionDefinition.cs" />

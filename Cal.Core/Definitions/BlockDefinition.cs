@@ -29,5 +29,14 @@ namespace Cal.Core.Definitions
         {
             Scope.AddVariable(tokenDef.GetContent());
         }
+
+        public ClassDefinition GetClassParent()
+        {
+            if (Kind == BlockKind.Class)
+                return (ClassDefinition) this;
+            if (Parent == null)
+                return null;
+            return Parent.GetClassParent();
+        }
     }
 }

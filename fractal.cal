@@ -18,7 +18,7 @@ def run
   puts
 end
 
-def iterate(x:double,y:double)
+def iterate(x:double,y:double) : int
   cr = y-0.5
   ci = x
   zi = 0.0

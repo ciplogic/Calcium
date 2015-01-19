@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Cal.Core.Definitions.ExpressionResolvers.Nodes;
 using Cal.Core.Definitions.IdentifierDefinition;
 using Cal.Core.Definitions.ReferenceDefinitions;
 using Cal.Core.Lexer;
+using Cal.Core.RuntimeResolvers;
 
 namespace Cal.Core.Definitions.ExpressionResolvers
 {
-    class ExpressionResolver
+    static class ExpressionResolver
     {
-        private static readonly HashSet<TokenKind> _binaryOperators;
+        private static readonly HashSet<TokenKind> BinaryOperators;
 
         static ExpressionResolver()
         {
-            _binaryOperators = new[]
+            BinaryOperators = new[]
             {
                 TokenKind.OpEquals,
                 TokenKind.OpGreaterThan,
@@ -40,12 +42,14 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             }
             return HandleMultipleItemsExpression(instructionDefinition, tokens);
         }
+
         private static ExprResolverBase HandleMultipleItemsExpression(BlockDefinition instructionDefinition, List<TokenDef> tokens)
         {
             var contentTokens = tokens;
-            if (IsFunction(contentTokens))
+            var functionResolver = GetFunctionResolver(contentTokens, instructionDefinition);
+            if (functionResolver!=null)
             {
-                return FunctionResolve(contentTokens, instructionDefinition);
+                return functionResolver.FunctionResolve(contentTokens, instructionDefinition);
             }
             if (IsParen(contentTokens))
             {
@@ -80,18 +84,11 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             return true;
         }
 
-        private static ExprResolverBase FunctionResolve(List<TokenDef> contentTokens, BlockDefinition instructionDefinition)
+        private static RuntimeResolverBase GetFunctionResolver(List<TokenDef> contentTokens, BlockDefinition instructionDefinition)
         {
-            ExprResolverBase result = new FunctionCallResolved(contentTokens, instructionDefinition);
-            return result;
-        }
-
-        private static bool IsFunction(List<TokenDef> contentTokens)
-        {
-            if (contentTokens[0].Kind == TokenKind.Identifier &&
-                contentTokens[1].Kind == TokenKind.OpOpenParen)
-                return true;
-            return false;
+            if (contentTokens[0].Kind != TokenKind.Identifier)
+                return null;
+            return Resolvers.Instance.GetFunctionResolver(contentTokens, instructionDefinition);
         }
 
         private static KeyValuePair<int, TokenDef> ComputeHighestPriorityToken(Dictionary<int, TokenDef> binaryTokens)
@@ -100,7 +97,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             {
                 throw new InvalidOperationException("Should have at least one item");
             }
-            var firstOfKinds = FirstOfKinds(binaryTokens, _binaryOperators);
+            var firstOfKinds = FirstOfKinds(binaryTokens, BinaryOperators);
             if (!firstOfKinds.HasValue)
             {
                 throw new InvalidOperationException("Unknown operator kind");
@@ -131,7 +128,7 @@ namespace Cal.Core.Definitions.ExpressionResolvers
 
         private static Dictionary<int, TokenDef> GetBinaryTokens(List<TokenDef> contentTokens)
         {
-            return contentTokens.TokensMatchingInTokenDefs(_binaryOperators);
+            return contentTokens.TokensMatchingInTokenDefs(BinaryOperators);
         }
 
 
@@ -161,26 +158,22 @@ namespace Cal.Core.Definitions.ExpressionResolvers
             throw new NotImplementedException();
         }
 
-        private static ExprResolverBase LocateMethod(string methodName, BlockDefinition context)
+        private static ExprResolverBase LocateMethod(TokenDef methodName, BlockDefinition context)
         {
-            var isClass = context.Kind == BlockKind.Class;
-            while (!isClass)
-            {
-                context = context.Parent;
-                isClass = context.Kind == BlockKind.Class;
-            }
-            var classDef = (ClassDefinition) context;
-            var result = classDef.Defs.FirstOrDefault(def => def.Name == methodName);
-
-            return result == null? null: new FunctionCallResolved(result);
+            var tokenList = new List<TokenDef> {methodName};
+            var resolver = Resolvers.Instance.GetFunctionResolver(tokenList, context.Parent);
+            if(resolver==null)
+                throw new InvalidDataException();
+            return resolver.FunctionResolve(tokenList, context);
         }
+
         private static ExprResolverBase ResolveVariableOrFunction(BlockDefinition expressionDefinition, TokenDef contentToken)
         {
             var parentBlock = expressionDefinition;
             var variableRef = (ReferenceVariableDefinition)parentBlock.LocateVariable(contentToken);
             if (variableRef== null||variableRef.VariableDefinition==null)
             {
-                return LocateMethod(contentToken.GetContent(), expressionDefinition);
+                return LocateMethod(contentToken, expressionDefinition);
             }
             var result = new VariableResolved(variableRef.VariableDefinition);
             return result;
@@ -204,11 +197,15 @@ namespace Cal.Core.Definitions.ExpressionResolvers
                 }
             }
 
-            return ResolveMethodInRuntime(tokens);
+            return ResolveMethodInRuntime(tokens, instructionDefinition);
         }
 
-        private static ExprResolverBase ResolveMethodInRuntime(List<TokenDef> tokens)
+        private static ExprResolverBase ResolveMethodInRuntime(List<TokenDef> tokens, BlockDefinition instruction)
         {
+            var resolverFunction = Resolvers.Instance.GetFunctionResolver(tokens, instruction);
+            if(resolverFunction==null)
+                throw new InvalidDataException("Should not happen");
+            return resolverFunction.FunctionResolve(tokens, instruction);
             return ReferenceResolver.Instance.ResolveMethod(tokens[0].GetContent(), tokens.Count-1);
         }
     }

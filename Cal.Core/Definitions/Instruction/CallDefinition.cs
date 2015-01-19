@@ -10,14 +10,14 @@ namespace Cal.Core.Definitions
 {
     public class CallDefinition : InstructionDefinition
     {
-        private readonly FunctionCallResolved _instructionResolver;
+        private readonly ExprResolverBase _instructionResolver;
         public List<TokenDef> CallingClass { get; set; }
         public string MethodName { get; set; }
         public List<ExprResolverBase> Arguments { get; set; }
 
         public CallDefinition(List<TokenDef> tokenDefs, BlockDefinition scope, ExprResolverBase instructionResolver) : base(scope)
         {
-            _instructionResolver = (FunctionCallResolved)instructionResolver;
+            _instructionResolver = instructionResolver;
             CallingClass = new List<TokenDef>();
             Arguments = new List<ExprResolverBase>();
             var hasParen = tokenDefs.Any(tok => tok.Kind == TokenKind.OpOpenParen);
@@ -47,9 +47,9 @@ namespace Cal.Core.Definitions
 
         public override void WriteCode(StringBuilder sb)
         {
-            sb.Append(_instructionResolver.FunctionName);
-            sb.AppendFormat("({0});",
-                string.Join(", ", Arguments.Select(arg => arg.ToCode())));
+            sb.Append(_instructionResolver.ToCode());
+            //sb.AppendFormat("({0});",
+              //  string.Join(", ", Arguments.Select(arg => arg.ToCode())));
             sb.AppendLine();
         }
     }

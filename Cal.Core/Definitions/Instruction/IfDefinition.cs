@@ -6,6 +6,7 @@ using Cal.Core.Utils;
 
 namespace Cal.Core.Definitions.Instruction
 {
+ 
     public class IfDefinition : InstructionDefinition
     {
         public ExprResolverBase IfExpression { get; private set; }
