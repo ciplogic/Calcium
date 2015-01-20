@@ -63,7 +63,7 @@ namespace Cal
             ReferenceResolver.Instance.ScanGlobalMethods(assemblyRuntime);
 
             string pathExamples = @"..\..\..\";
-            var fileName = pathExamples + "fractal.cal";
+            var fileName = Path.Combine(pathExamples, "fractal.cal");
             var lexer = new QuickLexer();
             var tokens = lexer.Scan(fileName);
             var parser = new BlockParser(tokens);
@@ -76,7 +76,6 @@ namespace Cal
             var generatedFiles = codeBuilder.GenerateFilePack(codeBuilder.MultiFile);
             File.WriteAllText(CsCodeGenerator.MainCs, generatedFiles[CsCodeGenerator.MainCs]);
             Console.WriteLine("Time to process: {0} ms", timer.CountTimeFromStart());
-            Console.ReadKey();
         }
     }
 
